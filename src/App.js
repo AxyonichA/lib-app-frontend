@@ -1,34 +1,33 @@
 
+import CommonButton from './components/CommonButton.js'
 export default {
+	components: {
+		"CommonButton": CommonButton,
+	},
 	template: `
-	<form>
-		<label>
-			<p>Название поста</p>
-			<input type='text' v-model="postTitle" />               
-		</label>
-		<label>
-			<p>Содержимое</p>
-			<textarea v-model="postBody" />               
-		</label>
-		<div>
-			<button @click="(e) => {
-				e.preventDefault()
-				postAdd()
-			}">Запостить</button>
-			<button @click="(e) => {
-				e.preventDefault()
-				postTitle = ''
-				postBody = ''
-			}">
-				Отмена
-			</button>
-		</div>
-	</form>
+		<form>
+			<label>
+				<p>Название поста</p>
+				<input type='text' v-model="postTitle" />               
+			</label>
+			<label>
+				<p>Содержимое</p>
+				<textarea v-model="postBody" />               
+			</label>
+			<div>
+				<CommonButton :onclick="postAdd">
+					Запостить
+				</CommonButton>
+				<CommonButton :onclick="clearPostAddForm">
+					Отмена
+				</CommonButton>
+			</div>
+		</form>
 	<ul style="list-style-type: none">
 	<li v-for="post in posts" :key="post.id">
 		<h2>{{post.title}}</h2>
 		<p>{{post.body}}</p>
-		<button @click="postDelete(post.id)">Удалить пост</button>
+		<CommonButton :onclick="() => postDelete(post.id)">Удалить пост</CommonButton>
 	</li>
 </ul>
 	`,
@@ -55,6 +54,14 @@ export default {
 			this.posts = [...this.posts, {title: this.postTitle, body: this.postBody}]
 			this.postTitle = ''
 			this.postBody = ''
-		}
+		},
+		clearPostAddForm() {
+			this.postTitle = ''
+			this.postBody = ''
+		},
+		updateParentData(postTitle, postBody) {
+      this.postTitle = postTitle;
+      this.postBody = postBody;
+    }
 	}
 }
