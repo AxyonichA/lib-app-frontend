@@ -1,40 +1,22 @@
 
+import AddPostForm from './components/AddPostForm.js'
 import CommonButton from './components/CommonButton.js'
+import Post from './components/Post.js'
+import PostList from './components/PostList.js'
+
 export default {
 	components: {
-		"CommonButton": CommonButton,
+		CommonButton,
+		Post,
+		AddPostForm,
+		PostList
 	},
 	template: `
-		<form>
-			<label>
-				<p>Название поста</p>
-				<input type='text' v-model="postTitle" />               
-			</label>
-			<label>
-				<p>Содержимое</p>
-				<textarea v-model="postBody" />               
-			</label>
-			<div>
-				<CommonButton :onclick="postAdd">
-					Запостить
-				</CommonButton>
-				<CommonButton :onclick="clearPostAddForm">
-					Отмена
-				</CommonButton>
-			</div>
-		</form>
-	<ul style="list-style-type: none">
-	<li v-for="post in posts" :key="post.id">
-		<h2>{{post.title}}</h2>
-		<p>{{post.body}}</p>
-		<CommonButton :onclick="() => postDelete(post.id)">Удалить пост</CommonButton>
-	</li>
-</ul>
+		<AddPostForm @postAdd="postAdd"></AddPostForm>
+		<PostList :posts="posts" :postDelete="postDelete" />
 	`,
 	data() {
 		return {
-			postTitle: "",
-			postBody: "",
 			posts: []     
 		}
 	},
@@ -50,18 +32,8 @@ export default {
 		postDelete(id) {
 			this.posts = this.posts.filter(p => p.id !== id)
 		},
-		postAdd() {
-			this.posts = [...this.posts, {title: this.postTitle, body: this.postBody}]
-			this.postTitle = ''
-			this.postBody = ''
+		postAdd(postTitle, postBody) {
+			this.posts.push({title: postTitle, body: postBody, id: this.posts.length + 1})
 		},
-		clearPostAddForm() {
-			this.postTitle = ''
-			this.postBody = ''
-		},
-		updateParentData(postTitle, postBody) {
-      this.postTitle = postTitle;
-      this.postBody = postBody;
-    }
 	}
 }

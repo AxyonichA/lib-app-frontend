@@ -1,15 +1,11 @@
 export default {
 	template: `
-		<button @click="(e) => {
-			e.preventDefault()
+		<button @click.prevent="(e) => {
 			onclick()
 		}">
 			<slot />
 		</button>
 	`,
-	methods: {
-
-	},
 	props: {
 		onclick: {
 			type: Function
