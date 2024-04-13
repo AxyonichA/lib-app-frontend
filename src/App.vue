@@ -2,7 +2,6 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { onMounted } from "vue"
 import { usePostsStore } from './stores/PostsStore'
-
 let { getPosts } = usePostsStore()
 onMounted(() => {
 	getPosts()
@@ -10,12 +9,14 @@ onMounted(() => {
 </script>
 
 <template>
-	<header>
-		<nav>
-			<RouterLink to="/">Home</RouterLink>
-			<RouterLink to="/authors">Authors</RouterLink>
+	<header class="d-flex w-100 p-4">
+		<nav class="d-flex flex-grow-1 gap-4 justify-content-center fs-5 ">
+			<RouterLink to="/" class="">Home</RouterLink>
+			<RouterLink to="/authors" class="">Authors</RouterLink>
 		</nav>
 	</header>
+	<main class="container">
+		<RouterView />		
+	</main>
 
-	<RouterView />
 </template>

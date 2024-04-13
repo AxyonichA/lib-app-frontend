@@ -1,3 +1,9 @@
+<script setup>
+
+</script>
 <template>
-	Hello
+	<section class="vh-100">
+		Authors here		
+	</section>
+
 </template>

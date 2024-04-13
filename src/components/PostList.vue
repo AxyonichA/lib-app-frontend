@@ -8,7 +8,7 @@ let {posts} = storeToRefs(usePostsStore())
 
 
 <template>
-	<ul style="list-style-type: none">
+	<section class="row row-cols-2 my-4 border mx-0 border-primary border-2 rounded">
 		<Post v-for="post in posts" :post="post" :key="post.id" />
-	</ul>	
+	</section>	
 </template>
