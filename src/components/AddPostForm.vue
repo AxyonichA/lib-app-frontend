@@ -1,6 +1,5 @@
 <script setup>
 import { storeToRefs } from 'pinia';
-import CommonButton from "./CommonButton.vue"
 import { usePostsStore } from '../stores/PostsStore'
 
 let { postAdd, clearPostAddForm } = usePostsStore()
@@ -19,12 +18,12 @@ let { postTitle, postBody } = storeToRefs(usePostsStore())
 			<textarea v-model="postBody" />               
 		</label>
 		<div>
-			<CommonButton :onclick="postAdd">
+			<button @click.prevent="postAdd">
 				Запостить
-			</CommonButton>
-			<CommonButton :onclick="clearPostAddForm">
+			</button>
+			<button @click.prevent="clearPostAddForm">
 				Отмена
-			</CommonButton>
+			</button>
 		</div>
 	</form>
 </template>

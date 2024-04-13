@@ -1,5 +1,4 @@
 <script setup>
-import CommonButton from './CommonButton.vue'
 import { usePostsStore } from '../stores/PostsStore';
 
 let { postDelete } = usePostsStore()
@@ -13,6 +12,6 @@ defineProps({
 	<li>
 		<h2>{{post.title}}</h2>
 		<p>{{post.body}}</p>
-		<CommonButton :onclick="() => postDelete(post.id)">Удалить пост</CommonButton>
+		<button @click.prevent="() => postDelete(post.id)">Удалить пост</button>
 	</li>
 </template>
