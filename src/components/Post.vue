@@ -14,4 +14,5 @@ defineProps({
 			<p class="h-50 overflow-hidden align-content-center ">{{post.body}}</p>
 			<button @click.prevent="() => postDelete(post.id)" class="btn btn-secondary">Удалить пост</button>
 		</article>
+		{{ name }}
 </template>

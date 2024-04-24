@@ -11,7 +11,8 @@ export const usePostsStore = defineStore('posts', () => {
 	async function postDelete(id) {
 		try {
 			const response = await axios.delete(`http://localhost:5000/api/posts/${id}`, { postId: id })
-			posts.value = posts.value.filter(post => post.id !== id)
+			// posts.value = posts.value.filter(post => post.id !== id)
+			posts.value = response.data
 		} catch (err) {
 			console.log(err)
 		}
