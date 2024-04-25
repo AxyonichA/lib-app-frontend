@@ -14,7 +14,7 @@ onBeforeMount(() => {
 </script>
 <template>
 	<section v-for="author in authors" class="row my-4 border mx-0 border-primary border-2 rounded">
-				<RouterLink :to="`/authors/${author.name}`" :key="author.id">{{author.name}}</RouterLink>
+				<RouterLink :to="`/authors/${author.id}/posts`" :key="author.id">{{author.name}}</RouterLink>
 	</section>	
 
 </template>

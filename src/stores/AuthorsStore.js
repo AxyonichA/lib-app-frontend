@@ -5,7 +5,7 @@ import { usePostsStore } from './PostsStore'
 export const useAuthorsStore = defineStore('authors', () => {
 	let {posts} = storeToRefs(usePostsStore())
 	let authors = ref([])
-
+	let authorName = ref('')
 	async function getAuthors() {
 		try {
 			const response = await axios("http://localhost:5000/api/authors")
@@ -15,13 +15,14 @@ export const useAuthorsStore = defineStore('authors', () => {
 		}
 	}
 
-	async function getAuthor(authorName) {
+	async function getAuthorPosts(id) {
 		try {
-			const response = await axios(`http://localhost:5000/api/authors/${authorName}`)
-			posts.value = response.data
+			const response = await axios(`http://localhost:5000/api/authors/${id}/posts`)
+			posts.value = response.data.authorPosts
+			authorName.value = response.data.name
 		} catch (err) {
 			console.log(err)
 		}
 	}
-	return { authors, getAuthors, getAuthor }
+	return { authors, authorName, getAuthors, getAuthorPosts }
 })
