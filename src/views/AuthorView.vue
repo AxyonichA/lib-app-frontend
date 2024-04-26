@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
@@ -14,6 +14,7 @@ let {posts} = storeToRefs(usePostsStore())
 
 let route = useRoute()
 let {authorId} = route.params
+
 onBeforeMount(() => {
 	getAuthorPosts(authorId)
 })

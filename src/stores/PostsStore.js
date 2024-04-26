@@ -5,9 +5,6 @@ import axios from 'axios'
 
 export const usePostsStore = defineStore('posts', () => {
 	let posts = ref([])
-	let postTitle = ref('')
-	let postBody = ref('')
-	let postAuthor = ref('')
 	let editedPost = ref({})
 	async function postDelete(id) {
 		try {
@@ -55,5 +52,5 @@ export const usePostsStore = defineStore('posts', () => {
 		}
 	}
 	
-	return { posts, postTitle, postBody, postAuthor, editedPost, postDelete, postUpdate, postAdd, getPosts, clearPostAddForm }
+	return { posts, editedPost, postDelete, postUpdate, postAdd, getPosts, clearPostAddForm }
 })
