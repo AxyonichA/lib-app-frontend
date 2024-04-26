@@ -8,8 +8,7 @@ export const usePostsStore = defineStore('posts', () => {
 	let postTitle = ref('')
 	let postBody = ref('')
 	let postAuthor = ref('')
-	let currentPostId = ref()
-
+	let editedPost = ref({})
 	async function postDelete(id) {
 		try {
 			await axios.delete(`http://localhost:5000/api/posts/${id}`, { postId: id })
@@ -19,12 +18,11 @@ export const usePostsStore = defineStore('posts', () => {
 	}
 
 	async function postAdd() {
-		if(postTitle.value === "" || postBody.value ==="" || postAuthor.value === "") {
+		if(!editedPost.value.title || !editedPost.value.body || !editedPost.value.author) {
 			return
 		}
 		try {
-			let response = await axios.post('http://localhost:5000/api/posts', {id: posts.value.length === 0 ? 1 : posts.value[posts.value.length - 1].id + 1, author: postAuthor.value, title: postTitle.value, body: postBody.value})
-			posts.value = response.data
+			await axios.post('http://localhost:5000/api/posts', {id: posts.value.length === 0 ? 1 : posts.value[posts.value.length - 1].id + 1, ...editedPost.value})
 		} catch (err) {
 			console.log(err)
 		}
@@ -32,12 +30,11 @@ export const usePostsStore = defineStore('posts', () => {
 	}
 
 	async function postUpdate(id) {
-		if(postTitle.value === "" || postBody.value ==="" || postAuthor.value === "") {
+		if(!editedPost.value.title || !editedPost.value.body || !editedPost.value.author) {
 			return
 		}
 		try {
-			let response = await axios.put(`http://localhost:5000/api/posts/${id}`, {author: postAuthor.value,title: postTitle.value, body: postBody.value})
-			// posts.value = response.data
+			await axios.put(`http://localhost:5000/api/posts/${id}`, {...editedPost.value})
 		} catch (err) {
 			console.log(err)
 		}
@@ -45,9 +42,7 @@ export const usePostsStore = defineStore('posts', () => {
 	}
 
 	function clearPostAddForm() {
-		postTitle.value = "";
-		postBody.value = "";
-		postAuthor.value = "";
+		editedPost.value = {}
 	}
 
 	async function getPosts() {
@@ -60,5 +55,5 @@ export const usePostsStore = defineStore('posts', () => {
 		}
 	}
 	
-	return { posts, postTitle, postBody, postAuthor, currentPostId, postDelete, postUpdate, postAdd, getPosts, clearPostAddForm }
+	return { posts, postTitle, postBody, postAuthor, editedPost, postDelete, postUpdate, postAdd, getPosts, clearPostAddForm }
 })

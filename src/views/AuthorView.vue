@@ -1,9 +1,8 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
-import UpdatePostFormModal from '../components/UpdatePostFormModal.vue'
 import PostList from "../components/PostList.vue"
 
 import { usePostsStore } from '../stores/PostsStore'
@@ -14,17 +13,15 @@ let {authorName} = storeToRefs(useAuthorsStore())
 let {posts} = storeToRefs(usePostsStore())
 
 let route = useRoute()
-let {id} = route.params
-
+let {authorId} = route.params
 onBeforeMount(() => {
-	getAuthorPosts(id)
+	getAuthorPosts(authorId)
 })
 </script>
 
 <template>
 	<h1>{{ authorName }}</h1>
 	<PostList v-if="posts.length !== 0">
-		<UpdatePostFormModal :parent="'author'"></UpdatePostFormModal>
 	</PostList>
 	<p v-if="posts.length === 0">У данного автора ещё нет публикаций</p>
 </template>

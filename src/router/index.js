@@ -7,7 +7,8 @@ import AuthorView from '../views/AuthorView.vue'
 const routes = [ 
 	{ path: '/', name: 'home', component: HomeView},
 	{ path: '/authors', name: 'authors', component: AuthorsView},
-	{ path: '/authors/:id/posts', component: AuthorView},
+	// { path: '/authors/:id/posts', component: AuthorView},
+	{ path: '/authors/:authorId/posts', component: AuthorView},
 
 ]
 const router = createRouter({

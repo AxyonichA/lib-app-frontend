@@ -1,11 +1,15 @@
 <script setup>
-import { ref } from 'vue'
+import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { usePostsStore } from '../stores/PostsStore'
+import { useAuthorsStore } from '../stores/AuthorsStore'
 
-let { postAdd, clearPostAddForm } = usePostsStore()
-let { postTitle, postBody, postAuthor } = storeToRefs(usePostsStore())
+let { postAdd, getPosts, postUpdate, clearPostAddForm } = usePostsStore()
+let { editedPost } = storeToRefs(usePostsStore())
+let { getAuthorPosts } = useAuthorsStore()
 
+let route = useRoute()
+let {authorId} = route.params
 </script>
 
 <template>
@@ -20,21 +24,24 @@ let { postTitle, postBody, postAuthor } = storeToRefs(usePostsStore())
 					<form class="p-2 border border-2 border-primary rounded ">
 						<label class="d-block">
 							<p class="m-1">Заголовок:</p>
-							<input type='text' v-model.trim="postTitle" class="w-100 form-control fs-5" />              
+							<input type='text' v-model.trim="editedPost.title" class="w-100 form-control fs-5" />              
 						</label>
 						<label class="d-block">
 							<p class="m-1">Текст:</p>
-							<textarea v-model.trim="postBody" class="w-100 form-control fs-6" rows="10"/>               
+							<textarea v-model.trim="editedPost.body" class="w-100 form-control fs-6" rows="10"/>               
 						</label>
 						<label class="d-block">
 							<p class="m-1">Автор:</p>
-							<input type="text" v-model.trim="postAuthor" class="w-100 form-control fs-5"/>               
+							<input type="text" v-model.trim="editedPost.author" class="w-100 form-control fs-5"/>               
 						</label>
 					</form>
 				</div>
 				<div class="modal-footer d-flex justify-content-between mt-3">
-					<button @click.prevent="postAdd" class="btn btn-primary" data-bs-dismiss="modal">
-						Запостить
+					<button @click.prevent="async () => {
+						editedPost.id ? await postUpdate(editedPost.id) : await postAdd()
+						authorId ? await getAuthorPosts(authorId) : await getPosts()
+					}" class="btn btn-primary" data-bs-dismiss="modal">
+						{{ editedPost.id ? 'Обновить' : 'Запостить' }}
 					</button>
 					<button @click.prevent="clearPostAddForm" class="btn btn-outline-primary" data-bs-dismiss="modal">
 						Отмена
