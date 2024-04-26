@@ -1,12 +1,14 @@
 import { ref } from "vue" 
 import { defineStore } from 'pinia'
+
 import axios from 'axios'
 
 export const usePostsStore = defineStore('posts', () => {
-
 	let posts = ref([])
 	let postTitle = ref('')
 	let postBody = ref('')
+	let postAuthor = ref('')
+	let currentPostId = ref()
 
 	async function postDelete(id) {
 		try {
@@ -17,11 +19,11 @@ export const usePostsStore = defineStore('posts', () => {
 	}
 
 	async function postAdd() {
-		if(postTitle.value === "" || postBody.value ==="") {
+		if(postTitle.value === "" || postBody.value ==="" || postAuthor.value === "") {
 			return
 		}
 		try {
-			let response = await axios.post('http://localhost:5000/api/posts', {id: posts.value.length === 0 ? 1 : posts.value[posts.value.length - 1].id + 1, title: postTitle.value, body: postBody.value})
+			let response = await axios.post('http://localhost:5000/api/posts', {id: posts.value.length === 0 ? 1 : posts.value[posts.value.length - 1].id + 1, author: postAuthor.value, title: postTitle.value, body: postBody.value})
 			posts.value = response.data
 		} catch (err) {
 			console.log(err)
@@ -30,12 +32,12 @@ export const usePostsStore = defineStore('posts', () => {
 	}
 
 	async function postUpdate(id) {
-		if(postTitle.value === "" || postBody.value ==="") {
+		if(postTitle.value === "" || postBody.value ==="" || postAuthor.value === "") {
 			return
 		}
 		try {
-			let response = await axios.put(`http://localhost:5000/api/posts/${id}`, {title: postTitle.value, body: postBody.value})
-			posts.value = response.data
+			let response = await axios.put(`http://localhost:5000/api/posts/${id}`, {author: postAuthor.value,title: postTitle.value, body: postBody.value})
+			// posts.value = response.data
 		} catch (err) {
 			console.log(err)
 		}
@@ -45,7 +47,8 @@ export const usePostsStore = defineStore('posts', () => {
 	function clearPostAddForm() {
 		postTitle.value = "";
 		postBody.value = "";
-		}
+		postAuthor.value = "";
+	}
 
 	async function getPosts() {
 		try {
@@ -57,5 +60,5 @@ export const usePostsStore = defineStore('posts', () => {
 		}
 	}
 	
-	return { posts, postTitle, postBody, postDelete, postUpdate, postAdd, getPosts, clearPostAddForm }
+	return { posts, postTitle, postBody, postAuthor, currentPostId, postDelete, postUpdate, postAdd, getPosts, clearPostAddForm }
 })

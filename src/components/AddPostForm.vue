@@ -1,18 +1,20 @@
 <script setup>
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia';
 import { usePostsStore } from '../stores/PostsStore'
-import { ref } from 'vue'
 
 let { postAdd, postUpdate, clearPostAddForm } = usePostsStore()
-let { postTitle, postBody, posts } = storeToRefs(usePostsStore())
+let { postTitle, postBody, postAuthor, posts } = storeToRefs(usePostsStore())
 let selected = ref('addPost')
+
 function handleSelectChange() {
 	clearPostAddForm()
+
 	if (selected.value === 'addPost') {
 		return
 	}
+
 	let selectedPost = posts.value.find(post => post.id === selected.value)
-	console.log(selectedPost)
 	postTitle.value = selectedPost.title
 	postBody.value = selectedPost.body
 }
@@ -27,6 +29,10 @@ function handleSelectChange() {
 		<label class="d-block">
 			<p class="m-1">Текст:</p>
 			<textarea v-model.trim="postBody" class="w-100 form-control fs-6" rows="10"/>               
+		</label>
+		<label class="d-block">
+			<p class="m-1">Автор:</p>
+			<input type="text" v-model.trim="postAuthor" class="w-100 form-control fs-5"/>               
 		</label>
 		<div class="d-flex justify-content-between mt-3">
 			<button v-if="selected === 'addPost'" @click.prevent="postAdd" class="btn btn-primary">

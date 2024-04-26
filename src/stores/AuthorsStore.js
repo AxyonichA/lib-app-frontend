@@ -1,11 +1,15 @@
-import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
+import { defineStore, storeToRefs } from 'pinia';
+
 import axios from 'axios';
+
 import { usePostsStore } from './PostsStore'
+
 export const useAuthorsStore = defineStore('authors', () => {
 	let {posts} = storeToRefs(usePostsStore())
 	let authors = ref([])
 	let authorName = ref('')
+
 	async function getAuthors() {
 		try {
 			const response = await axios("http://localhost:5000/api/authors")
