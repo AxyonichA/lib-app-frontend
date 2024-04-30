@@ -18,7 +18,7 @@ const posts = defineModel('posts')
 		<article class="col d-flex flex-column p-3 text-center border border-primary" style="height: 450px">
 			<h2 class="my-auto">{{post.title}}</h2>
 			<p class="h-50 overflow-hidden align-content-center ">{{post.body}}</p>
-			<span v-if="!authorId" class="ms-auto fs-3">{{ post.author }}</span>
+			<span v-if="!authorId" class="ms-auto fs-5">{{ post.authorName }}</span>
 			<button @click.prevent="async () => {
 				await postDelete(post.id);
 				posts = authorId ? (await getAuthorPosts(authorId))[0] : await getPosts()
