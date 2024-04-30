@@ -1,31 +1,28 @@
 <script setup>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
 
 import Modal from '../components/Modal.vue'
 import PostList from "../components/PostList.vue"
 
-import { usePostsStore } from '../stores/PostsStore'
-import { useAuthorsStore } from '../stores/AuthorsStore'
-
-let {posts, editedPost} = storeToRefs(usePostsStore())
-let { postAdd, postUpdate, clearPostAddForm } = usePostsStore()
-let { getAuthorPosts } = useAuthorsStore()
-let {authorName} = storeToRefs(useAuthorsStore())
+import { postAdd, postUpdate } from '../requests/postsReq';
+import { getAuthorPosts } from '../requests/authorReq';
 
 let route = useRoute()
 let {authorId} = route.params
 
-onBeforeMount(() => {
-	getAuthorPosts(authorId)
+let posts = ref([])
+let editedPost = ref({})
+let name = ''
+
+onBeforeMount(async() => {
+	[posts.value, name] = await getAuthorPosts(authorId)
 })
 </script>
 
 <template>
 	<div class="d-flex justify-content-center ">
 		<button type="button" @click="() => {
-			clearPostAddForm()
 			editedPost.userID = Number(authorId)
 		}" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#modal">
 			Добавить пост
@@ -50,18 +47,18 @@ onBeforeMount(() => {
 		</template>
 		<template v-slot:postEdit>
 			<button @click.prevent="async () => {
-				editedPost.id ? await postUpdate(editedPost.id) : await postAdd()
-				await getAuthorPosts(authorId)
+				editedPost.id ? await postUpdate(editedPost) : await postAdd(editedPost, posts)
+				editedPost = {}
+				posts = (await getAuthorPosts(authorId))[0]
 			}" class="btn btn-primary" data-bs-dismiss="modal">
 				{{ editedPost.id ? 'Обновить' : 'Запостить' }}
 			</button>
-			<button @click.prevent="clearPostAddForm" class="btn btn-outline-primary" data-bs-dismiss="modal">
+			<button @click.prevent="editedPost = {}" class="btn btn-outline-primary" data-bs-dismiss="modal">
 				Отмена
 			</button>
 		</template>
 	</Modal>
-	<h1>{{ authorName }}</h1>
-	<PostList v-if="posts.length !== 0">
-	</PostList>
+	<h1>{{ name }}</h1>
+	<PostList v-model:editedPost="editedPost" v-model:posts="posts" v-if="posts.length !== 0" />
 	<p v-if="posts.length === 0">У данного автора ещё нет публикаций</p>
 </template>

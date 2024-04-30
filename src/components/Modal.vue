@@ -14,7 +14,7 @@
 				<div class="modal-body">
 					<slot name="form"/>
 				</div>
-				<div class="modal-footer d-flex justify-content-between mt-3">
+				<div class="modal-footer justify-content-between mt-3">
 					<slot name="postEdit" />
 				</div>
 			</div>

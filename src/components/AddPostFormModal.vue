@@ -1,12 +1,8 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { usePostsStore } from '../stores/PostsStore'
-import { useAuthorsStore } from '../stores/AuthorsStore'
 
-let { postAdd, getPosts, postUpdate, clearPostAddForm } = usePostsStore()
-let { editedPost } = storeToRefs(usePostsStore())
-let { getAuthorPosts } = useAuthorsStore()
+import { getPosts, postAdd, postUpdate } from '../requests/postsReq';
+import { getAuthorPosts } from '../requests/authorReq';
 
 let route = useRoute()
 let {authorId} = route.params

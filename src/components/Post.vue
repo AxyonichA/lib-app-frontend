@@ -1,20 +1,17 @@
 <script setup>
+import { defineModel } from 'vue';
 import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia';
 
-import { usePostsStore } from '../stores/PostsStore';
-import { useAuthorsStore } from '../stores/AuthorsStore'
-
-let { postDelete, getPosts } = usePostsStore()
-let { getAuthorPosts } = useAuthorsStore()
-let { editedPost } = storeToRefs(usePostsStore())
+import { getPosts, postDelete } from '../requests/postsReq';
+import { getAuthorPosts } from '../requests/authorReq';
 
 let route = useRoute()
 let {authorId} = route.params
 defineProps({
 	post: Object,
 })
-
+const editedPost = defineModel('editedPost')
+const posts = defineModel('posts')
 </script>
 
 <template>
@@ -24,7 +21,7 @@ defineProps({
 			<span v-if="!authorId" class="ms-auto fs-3">{{ post.author }}</span>
 			<button @click.prevent="async () => {
 				await postDelete(post.id);
-				authorId ? await getAuthorPosts(authorId) : await getPosts()
+				posts = authorId ? (await getAuthorPosts(authorId))[0] : await getPosts()
 			}" class="btn btn-danger">Удалить пост</button>
 			<button @click="() => editedPost = {...post}" class="btn btn-secondary mt-1 " data-bs-toggle="modal" data-bs-target="#modal">Редактировать</button>
 		</article>

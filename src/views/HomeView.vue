@@ -1,16 +1,16 @@
 <script setup>
-import { onBeforeMount } from "vue"
-import { storeToRefs } from 'pinia';
-import { usePostsStore } from '../stores/PostsStore'
+import { onBeforeMount, ref } from "vue"
 
 import Modal from '../components/Modal.vue'
 import PostList from "../components/PostList.vue"
 
-let {editedPost} = storeToRefs(usePostsStore())
-let { postAdd, getPosts, postUpdate, clearPostAddForm } = usePostsStore()
+import { getPosts, postAdd, postUpdate } from '../requests/postsReq';
 
-onBeforeMount(() => {
-	getPosts()
+let posts = ref([])
+let editedPost = ref({})
+
+onBeforeMount(async() => {
+	posts.value = await getPosts()
 })
 </script>
 
@@ -33,21 +33,22 @@ onBeforeMount(() => {
 			</form>
 		</template>
 		<template v-slot:postEdit>
-			<button @click.prevent="async () => {
-				editedPost.id ? await postUpdate(editedPost.id) : await postAdd()
-				await getPosts()
-			}" class="btn btn-primary" data-bs-dismiss="modal">
-				{{ editedPost.id ? 'Обновить' : 'Запостить' }}
-			</button>
-			<button @click.prevent="clearPostAddForm" class="btn btn-outline-primary" data-bs-dismiss="modal">
-				Отмена
-			</button>
+				<button @click.prevent="async () => {
+					editedPost.id ? await postUpdate(editedPost) : await postAdd(editedPost, posts)
+					editedPost = {}
+					posts = await getPosts()
+				}" class="btn btn-primary" data-bs-dismiss="modal">
+					{{ editedPost.id ? 'Обновить' : 'Запостить' }}
+				</button>
+				<button @click.prevent="editedPost = {}" class="btn btn-outline-primary" data-bs-dismiss="modal">
+					Отмена
+				</button>				
 		</template>
 	</Modal>
 	<div class="d-flex justify-content-center ">
-		<button type="button" @click="clearPostAddForm" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#modal">
+		<button type="button" @click="editedPost = {}" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#modal">
 			Добавить пост
 		</button>		
 	</div>
-	<PostList />
+	<PostList v-model:editedPost="editedPost" v-model:posts="posts"/>
 </template>

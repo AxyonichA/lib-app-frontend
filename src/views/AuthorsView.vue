@@ -1,15 +1,13 @@
 <script setup>
-import { onBeforeMount } from "vue"
+import { onBeforeMount, ref } from "vue"
 import { RouterLink } from 'vue-router'
-import { storeToRefs } from 'pinia'
 
-import { useAuthorsStore } from '../stores/AuthorsStore';
+import { getAuthors } from '../requests/authorReq';
 
-let { getAuthors } = useAuthorsStore()
-let { authors } = storeToRefs(useAuthorsStore())
+let authors = ref([])
 
-onBeforeMount(() => {
-	getAuthors()
+onBeforeMount(async() => {
+	authors.value = await getAuthors()
 })
 </script>
 
