@@ -26,6 +26,6 @@ defineProps({
 				await postDelete(post.id);
 				authorId ? await getAuthorPosts(authorId) : await getPosts()
 			}" class="btn btn-danger">Удалить пост</button>
-			<button @click="() => editedPost = {...post}" class="btn btn-secondary mt-1 " data-bs-toggle="modal" data-bs-target="#addPostModal">Редактировать</button>
+			<button @click="() => editedPost = {...post}" class="btn btn-secondary mt-1 " data-bs-toggle="modal" data-bs-target="#modal">Редактировать</button>
 		</article>
 </template>

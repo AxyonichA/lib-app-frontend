@@ -18,7 +18,7 @@ let {authorId} = route.params
 			<div class="modal-content">
 				<div class="modal-header">
 					<h1 class="modal-title fs-5" id="staticBackdropLabel">Новый пост</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">Закрыть</button>
 				</div>
 				<div class="modal-body">
 					<form class="p-2 border border-2 border-primary rounded ">
@@ -31,8 +31,8 @@ let {authorId} = route.params
 							<textarea v-model.trim="editedPost.body" class="w-100 form-control fs-6" rows="10"/>               
 						</label>
 						<label class="d-block">
-							<p class="m-1">Автор:</p>
-							<input type="text" v-model.trim="editedPost.author" class="w-100 form-control fs-5"/>               
+							<p class="m-1">Идентификатор автора:</p>
+							<input type="text" v-model.trim.number="editedPost.userID" class="w-100 form-control fs-5"/>               
 						</label>
 					</form>
 				</div>

@@ -22,7 +22,7 @@ export const useAuthorsStore = defineStore('authors', () => {
 	async function getAuthorPosts(id) {
 		try {
 			const response = await axios(`http://localhost:5000/api/authors/${id}/posts`)
-			posts.value = response.data.authorPosts
+			posts.value = response.data.userPosts
 			authorName.value = response.data.name
 		} catch (err) {
 			console.log(err)

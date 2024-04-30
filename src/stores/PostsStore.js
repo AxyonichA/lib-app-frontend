@@ -14,8 +14,9 @@ export const usePostsStore = defineStore('posts', () => {
 		}
 	}
 
+
 	async function postAdd() {
-		if(!editedPost.value.title || !editedPost.value.body || !editedPost.value.author) {
+		if(!editedPost.value.title || !editedPost.value.body || !editedPost.value.userID) {
 			return
 		}
 		try {
@@ -27,7 +28,7 @@ export const usePostsStore = defineStore('posts', () => {
 	}
 
 	async function postUpdate(id) {
-		if(!editedPost.value.title || !editedPost.value.body || !editedPost.value.author) {
+		if(!editedPost.value.title || !editedPost.value.body || !editedPost.value.userID) {
 			return
 		}
 		try {
