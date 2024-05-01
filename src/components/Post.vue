@@ -12,6 +12,8 @@ defineProps({
 })
 const editedPost = defineModel('editedPost')
 const posts = defineModel('posts')
+const modalTitle = defineModel('modalTitle')
+const modalShow = defineModel('modalShow')
 </script>
 
 <template>
@@ -23,6 +25,10 @@ const posts = defineModel('posts')
 				await postDelete(post.id);
 				posts = authorId ? (await getAuthorPosts(authorId))[0] : await getPosts()
 			}" class="btn btn-danger">Удалить пост</button>
-			<button @click="() => editedPost = {...post}" class="btn btn-secondary mt-1 " data-bs-toggle="modal" data-bs-target="#modal">Редактировать</button>
+			<button @click="() => {
+				editedPost = {...post}
+				modalTitle = 'Редактировать пост'
+				modalShow = true
+			}" class="btn btn-secondary mt-1 ">Редактировать</button>
 		</article>
 </template>

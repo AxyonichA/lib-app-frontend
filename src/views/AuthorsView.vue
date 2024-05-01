@@ -2,17 +2,63 @@
 import { onBeforeMount, ref } from "vue"
 import { RouterLink } from 'vue-router'
 
-import { getAuthors } from '../requests/authorReq';
+import Modal from '../components/Modal.vue'
+import { getAuthors, createAuthor, deleteAuthor } from '../requests/authorReq';
 
 let authors = ref([])
-
+let editedAuthor = ref('')
+let modalTitle = ref('')
+let modalShow = ref(false)
 onBeforeMount(async() => {
 	authors.value = await getAuthors()
 })
 </script>
 
 <template>
+	<div class="d-flex justify-content-center ">
+		<button type="button" @click="() => {
+			modalTitle = 'Добавить автора'
+			modalShow = true
+		}" class="btn btn-primary w-50">
+			Добавить автора
+		</button>		
+	</div>
 	<section v-for="author in authors" class="row my-4 border mx-0 border-primary border-2 rounded">
-				<RouterLink :to="`/authors/${author.id}/posts`" :key="author.id">{{author.name}}</RouterLink>
-	</section>	
+		<div class="d-flex justify-content-between align-items-center ">
+				<RouterLink :to="`/authors/${author.id}/posts`" :key="author.id" class="fs-4">{{author.name}}</RouterLink>
+				<button @click.prevent="async () => {
+					await deleteAuthor(author.id)
+					authors = await getAuthors()
+				}" class="btn btn-danger">Удалить автора</button>			
+		</div>
+
+	</section>
+	<Modal :title="modalTitle" v-model:modalShow="modalShow">
+		<template v-slot:modalBody>
+			<form class="p-2 border border-2 border-primary rounded ">
+				<label class="d-block">
+					<p class="m-1">Имя автора:</p>
+					<input type='text' v-model.trim="editedAuthor" class="w-100 form-control fs-5" />              
+				</label>
+			</form>
+		</template>
+		<template v-slot:modalFooter>
+			<button @click.prevent="async () => {
+				if(!editedAuthor) {
+					return
+				}
+				await createAuthor(editedAuthor)
+				authors = await getAuthors()
+				editedAuthor = ''
+				modalShow = false
+			}" class="btn btn-primary">
+				Добавить автора
+			</button>
+			<button @click.prevent="() => {
+				editedAuthor = ''
+			}" class="btn btn-outline-primary">
+				Очистить
+			</button>			
+		</template>
+	</Modal>
 </template>

@@ -9,9 +9,6 @@ async function postDelete(id) {
 }
 
 async function postAdd(editedPost, posts) {
-	if(!editedPost.title || !editedPost.body || !editedPost.userID) {
-		return
-	}
 	try {
 		await axios.post('http://localhost:5000/api/posts', {id: posts.length === 0 ? 1 : posts[posts.length - 1].id + 1, ...editedPost})
 	} catch (err) {
@@ -20,9 +17,6 @@ async function postAdd(editedPost, posts) {
 }
 
 async function postUpdate(editedPost) {
-	if(!editedPost.title || !editedPost.body || !editedPost.userID) {
-		return
-	}
 	try {
 		await axios.put(`http://localhost:5000/api/posts/${editedPost.id}`, {...editedPost})
 	} catch (err) {

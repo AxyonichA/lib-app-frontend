@@ -9,6 +9,22 @@ async function getAuthors() {
 	}
 }
 
+async function createAuthor(editedAuthor) {
+	try {
+		console.log(editedAuthor)
+		await axios.post("http://localhost:5000/api/authors", {editedAuthor})
+	}	catch (err) {
+		console.log(err)
+	}
+}
+
+async function deleteAuthor(id) {
+	try {
+		await axios.delete(`http://localhost:5000/api/authors/${id}`)
+	} catch (err) {
+		console.log(err)
+	}
+}
 async function getAuthorPosts(id) {
 	try {
 		const response = await axios(`http://localhost:5000/api/authors/${id}/posts`)
@@ -19,4 +35,4 @@ async function getAuthorPosts(id) {
 	}
 }
 
-export {getAuthors, getAuthorPosts}
+export {getAuthors, getAuthorPosts, createAuthor, deleteAuthor}

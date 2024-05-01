@@ -1,21 +1,24 @@
 <script setup>
 
-
+defineProps({
+	title: String
+})
+const modalShow = defineModel('modalShow')
 </script>
 
 <template>
-	<div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal" :class="{ 'd-block': modalShow }" id="modal" aria-labelledby="staticBackdropLabel">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="staticBackdropLabel">Новый пост</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">Закрыть</button>
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ title }}</h1>
+					<button type="button" class="btn-close" @click="modalShow = false">Закрыть</button>
 				</div>
 				<div class="modal-body">
-					<slot name="form"/>
+					<slot name="modalBody"/>
 				</div>
 				<div class="modal-footer justify-content-between mt-3">
-					<slot name="postEdit" />
+					<slot name="modalFooter" />
 				</div>
 			</div>
 		</div>
