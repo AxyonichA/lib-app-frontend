@@ -1,18 +1,14 @@
 <script setup>
-
-defineProps({
-	title: String
-})
 const modalShow = defineModel('modalShow')
 </script>
 
 <template>
+	<slot name="modalButton" />
 	<div class="modal" :class="{ 'd-block': modalShow }" id="modal" aria-labelledby="staticBackdropLabel">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ title }}</h1>
-					<button type="button" class="btn-close" @click="modalShow = false">Закрыть</button>
+					<slot name="modalHeader" />
 				</div>
 				<div class="modal-body">
 					<slot name="modalBody"/>

@@ -8,9 +8,9 @@ async function postDelete(id) {
 	}
 }
 
-async function postAdd(editedPost, posts) {
+async function postAdd(editedPost) {
 	try {
-		await axios.post('http://localhost:5000/api/posts', {id: posts.length === 0 ? 1 : posts[posts.length - 1].id + 1, ...editedPost})
+		await axios.post('http://localhost:5000/api/posts', {...editedPost})
 	} catch (err) {
 		console.log(err)
 	}

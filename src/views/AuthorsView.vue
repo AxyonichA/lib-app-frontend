@@ -9,31 +9,33 @@ let authors = ref([])
 let editedAuthor = ref('')
 let modalTitle = ref('')
 let modalShow = ref(false)
+
 onBeforeMount(async() => {
 	authors.value = await getAuthors()
 })
 </script>
 
 <template>
-	<div class="d-flex justify-content-center ">
-		<button type="button" @click="() => {
-			modalTitle = 'Добавить автора'
-			modalShow = true
-		}" class="btn btn-primary w-50">
-			Добавить автора
-		</button>		
-	</div>
-	<section v-for="author in authors" class="row my-4 border mx-0 border-primary border-2 rounded">
-		<div class="d-flex justify-content-between align-items-center ">
-				<RouterLink :to="`/authors/${author.id}/posts`" :key="author.id" class="fs-4">{{author.name}}</RouterLink>
-				<button @click.prevent="async () => {
-					await deleteAuthor(author.id)
-					authors = await getAuthors()
-				}" class="btn btn-danger">Удалить автора</button>			
-		</div>
 
-	</section>
-	<Modal :title="modalTitle" v-model:modalShow="modalShow">
+
+	<Modal v-model:modalShow="modalShow">
+		<template v-slot:modalButton>
+			<div class="d-flex justify-content-center ">
+				<button type="button" @click="() => {
+					modalTitle = 'Добавить автора'
+					modalShow = true
+				}" class="btn btn-primary w-50">
+					Добавить автора
+				</button>		
+			</div>
+		</template>
+		<template v-slot:modalHeader>
+			<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ modalTitle }}</h1>
+			<button type="button" class="btn-close" @click="() => {
+				modalShow = false
+				editedAuthor = ''
+			}">Закрыть</button>
+		</template>
 		<template v-slot:modalBody>
 			<form class="p-2 border border-2 border-primary rounded ">
 				<label class="d-block">
@@ -60,5 +62,14 @@ onBeforeMount(async() => {
 				Очистить
 			</button>			
 		</template>
-	</Modal>
+	</Modal>	
+	<section v-for="author in authors" class="row my-4 border mx-0 border-primary border-2 rounded">
+		<div class="d-flex justify-content-between align-items-center ">
+				<RouterLink :to="`/authors/${author.id}/posts`" :key="author.id" class="fs-4">{{author.name}}</RouterLink>
+				<button @click.prevent="async () => {
+					await deleteAuthor(author.id)
+					authors = await getAuthors()
+				}" class="btn btn-danger">Удалить автора</button>			
+		</div>
+	</section>
 </template>
