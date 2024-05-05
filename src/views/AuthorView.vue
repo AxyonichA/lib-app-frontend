@@ -5,14 +5,14 @@ import { useRoute } from 'vue-router';
 import EditPostForm from '../components/EditPostForm.vue'
 import PostList from "../components/PostList.vue"
 
-import { getAuthors, getAuthorPosts } from '../requests/authorReq';
+import { getAuthors, getAuthorBooks } from '../requests/authorReq';
 
 
 let route = useRoute()
 let {authorId} = route.params
 
-let posts = ref([])
-let editedPost = ref({})
+let books = ref([])
+let editedBook = ref({})
 
 let authors = ref([])
 
@@ -22,14 +22,14 @@ let modalShow = ref(false)
 let name = ''
 
 onBeforeMount(async() => {
-	[posts.value, name] = await getAuthorPosts(authorId)
+	[books.value, name] = await getAuthorBooks(authorId)
 	authors.value = await getAuthors()
 })
 </script>
 
 <template>
-	<EditPostForm :authors="authors"  :authorId="authorId" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedPost="editedPost" v-model:posts="posts"/>
+	<EditPostForm :authors="authors"  :authorId="authorId" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
 	<h1>{{ name }}</h1>
-	<PostList v-if="posts.length !== 0"  v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedPost="editedPost" v-model:posts="posts"/>
-	<p v-if="posts.length === 0">У данного автора ещё нет публикаций</p>
+	<PostList v-if="books.length !== 0"  v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
+	<p v-if="books.length === 0">У данного автора ещё нет публикаций</p>
 </template>

@@ -25,14 +25,14 @@ async function deleteAuthor(id) {
 		console.log(err)
 	}
 }
-async function getAuthorPosts(id) {
+async function getAuthorBooks(id) {
 	try {
-		const response = await axios(`http://localhost:5000/api/authors/${id}/posts`)
-		const {userPosts, name} = response.data
-		return [userPosts, name]
+		const response = await axios(`http://localhost:5000/api/authors/${id}/books`)
+		const {authorBooks, name} = response.data
+		return [authorBooks, name]
 	} catch (err) {
 		console.log(err)
 	}
 }
 
-export {getAuthors, getAuthorPosts, createAuthor, deleteAuthor}
+export {getAuthors, getAuthorBooks, createAuthor, deleteAuthor}

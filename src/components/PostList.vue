@@ -3,24 +3,24 @@ import { defineModel } from 'vue';
 
 import Post from './Post.vue'
 
-import { getPosts, postDelete } from '../requests/postsReq';
-import { getAuthorPosts } from '../requests/authorReq';
+import { getBooks, bookDelete } from '../requests/booksReq';
+import { getAuthorBooks } from '../requests/authorReq';
 
-const editedPost = defineModel('editedPost')
-const posts = defineModel('posts')
+const editedBook = defineModel('editedBook')
+const books = defineModel('books')
 
 const modalTitle = defineModel('modalTitle')
 const modalShow = defineModel('modalShow')
 
 
-async function handlePostDelete(post, authorId) {
-	await postDelete(post.id);
-	posts.value = authorId ? (await getAuthorPosts(authorId))[0] : await getPosts()
+async function handlePostDelete(book, authorId) {
+	await bookDelete(book.id);
+	books.value = authorId ? (await getAuthorBooks(authorId))[0] : await getBooks()
 }
 
-function handleChangePostClick(post) {
-	editedPost.value = {...post}
-	modalTitle.value = 'Редактировать пост'
+function handleChangePostClick(book) {
+	editedBook.value = {...book}
+	modalTitle.value = 'Редактировать книгу'
 	modalShow.value = true
 }
 </script>
@@ -28,6 +28,6 @@ function handleChangePostClick(post) {
 
 <template>
 	<section class="row row-cols-2 my-4 border mx-0 border-primary border-2 rounded">
-		<Post v-for="post in posts" :post="post" @handleChangePostClick="handleChangePostClick" @handlePostDelete="handlePostDelete" :key="post.id" />
+		<Post v-for="book in books" :book="book" @handleChangePostClick="handleChangePostClick" @handlePostDelete="handlePostDelete" :key="book.id" />
 	</section>
 </template>
