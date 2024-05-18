@@ -28,6 +28,6 @@ function handleChangePostClick(book) {
 
 <template>
 	<section class="row row-cols-2 my-4 border mx-0 border-primary border-2 rounded">
-		<Post v-for="book in books" :book="book" @handleChangePostClick="handleChangePostClick" @handlePostDelete="handlePostDelete" :key="book.id" />
+		<Post v-for="book in books" :book @handleChangePostClick="handleChangePostClick" @handlePostDelete="handlePostDelete" :key="book.id" />
 	</section>
 </template>

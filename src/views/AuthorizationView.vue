@@ -1,10 +1,45 @@
 <script setup>
 import {ref} from 'vue'
 
-import {authorizate, registrate } from '../requests/auth.js';
+import { signin, signup } from '../requests/auth.js';
+
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '../stores/useAuthStore.js';
+import { useRouter } from 'vue-router'
+
+let { user, token } = storeToRefs(useAuthStore())
+
+const router = useRouter()
 
 let userData = ref({})
 let registration = ref(false)
+
+async function handleSignIn(userData) {
+	if(!userData.login || !userData.password) {
+		return
+	}		
+	let data = await signin(userData)
+	if(data) {
+		user.value = data.user
+		console.log(user.value)
+		document.cookie = `token=${data.token}`
+		document.cookie = `userID=${data.user.id}`
+		console.log(data.msg)
+		router.push({path: '/'})
+	}
+}
+async function handleSignUp(userData) {
+	if(!userData.login || !userData.password || !userData.nickName) {
+		return
+	}		
+	let data = await signup(userData)
+	if(data) {
+		user.value = data.user
+		token.value = data.token
+		localStorage.setItem('token', data.token)
+		console.log(data.msg)
+	}
+}
 </script>
 
 <template>
@@ -23,22 +58,8 @@ let registration = ref(false)
 		</label>
 	</form>
 	<div class="w-100 d-flex justify-content-between">
-		<button v-if="!registration" @click.prevent="async() => {
-			if(userData.login === '' || userData.password === '') {
-				return
-			}
-			data = await authorizate(userData)
-			console.log(data)
-			userData = {}
-		}" class="btn btn-primary">
-			{{registration ? 'Зарегистрироваться' : 'Войти'}}
-		</button>
-		<button v-if="registration" @click.prevent="async() => {
-			if(!userData.login || !userData.password || !userData.nickName) {
-				return
-			}
-			let data = await registrate(userData)
-			console.log(data)
+		<button @click.prevent="async() => {
+			registration ? await handleSignUp(userData) : await handleSignIn(userData)
 			userData = {}
 		}" class="btn btn-primary">
 			{{registration ? 'Зарегистрироваться' : 'Войти'}}
