@@ -10,6 +10,5 @@ const extractInfoFromCookies = (info) => {
 }
 function clearAllCookies() {
   document.cookie = 'token=; max-age=-1'
-  document.cookie = 'userID=; max-age=-1'
 }
 export { extractInfoFromCookies, clearAllCookies }

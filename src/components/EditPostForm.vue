@@ -54,7 +54,7 @@ function handleAddPostClick() {
 			}">Закрыть</button>
 		</template>
 		<template v-slot:modalBody>
-			<form class="p-2 border border-2 border-primary rounded ">
+			<form class="p-2 border border-2 border-primary rounded">
 				<label class="d-block">
 					<p class="m-1">Заголовок:</p>
 					<input type='text' v-model.trim="editedBook.title" class="w-100 form-control fs-5" />              

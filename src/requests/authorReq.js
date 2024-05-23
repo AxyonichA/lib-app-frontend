@@ -2,7 +2,7 @@ import axios from 'axios'
 
 async function getAuthors() {
 	try {
-		const response = await axios("http://localhost:5000/api/authors")
+		const response = await axios("/api/authors")
 		return response.data
 	} catch (err) {
 		console.log(err)
@@ -12,7 +12,7 @@ async function getAuthors() {
 async function createAuthor(editedAuthor) {
 	try {
 		console.log(editedAuthor)
-		await axios.post("http://localhost:5000/api/authors", {editedAuthor})
+		await axios.post("/api/authors", {editedAuthor})
 	}	catch (err) {
 		console.log(err)
 	}
@@ -20,14 +20,14 @@ async function createAuthor(editedAuthor) {
 
 async function deleteAuthor(id) {
 	try {
-		await axios.delete(`http://localhost:5000/api/authors/${id}`)
+		const response = await axios.delete(`/api/authors/${id}`)
 	} catch (err) {
-		console.log(err)
+		console.log(err.response.data.msg)
 	}
 }
 async function getAuthorBooks(id) {
 	try {
-		const response = await axios(`http://localhost:5000/api/authors/${id}/books`)
+		const response = await axios(`/api/authors/${id}/books`)
 		const {authorBooks, name} = response.data
 		return [authorBooks, name]
 	} catch (err) {

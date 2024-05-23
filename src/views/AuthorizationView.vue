@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '../stores/useAuthStore.js';
 import { useRouter } from 'vue-router'
 
-let { user, token } = storeToRefs(useAuthStore())
+let { user } = storeToRefs(useAuthStore())
 
 const router = useRouter()
 
@@ -23,7 +23,6 @@ async function handleSignIn(userData) {
 		user.value = data.user
 		console.log(user.value)
 		document.cookie = `token=${data.token}`
-		document.cookie = `userID=${data.user.id}`
 		console.log(data.msg)
 		router.push({path: '/'})
 	}
@@ -35,9 +34,9 @@ async function handleSignUp(userData) {
 	let data = await signup(userData)
 	if(data) {
 		user.value = data.user
-		token.value = data.token
-		localStorage.setItem('token', data.token)
+		document.cookie = `token=${data.token}`
 		console.log(data.msg)
+		router.push({path: '/'})
 	}
 }
 </script>

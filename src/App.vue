@@ -14,6 +14,8 @@ const router = useRouter()
 		<nav class="d-flex flex-grow-1 gap-4 justify-content-center fs-5 ">
 			<RouterLink to="/" class="">Home</RouterLink>
 			<RouterLink to="/authors" class="">Authors</RouterLink>
+			<RouterLink to="/profile" class="">Profile</RouterLink>
+			<RouterLink v-if="user?.role === 'admin'" to="/admin" class="">Admin</RouterLink>
 		</nav>
 	
 		<button v-if="!user"  type="button" class="btn btn-bs-white border border-1 border-primary position-absolute end-0 align-self-center translate-middle-x">
@@ -21,7 +23,7 @@ const router = useRouter()
 		</button>		
 		<button v-if="user" @click="() => {
 			console.log(user)
-			user = undefined
+			user = null
 			console.log(user)
 			clearAllCookies()
 			router.push('/authorization')
