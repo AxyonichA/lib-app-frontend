@@ -35,16 +35,6 @@ onBeforeMount(async() => {
 <template>
 	
 	<Modal v-model:modalShow="modalShow">
-		<!-- <template v-slot:modalButton>
-			<div class="d-flex justify-content-center ">
-				<button type="button" @click="() => {
-					modalTitle = 'Добавить пользователя'
-					modalShow = true
-				}" class="btn btn-primary w-50">
-					Добавить пользователя
-				</button>		
-			</div>
-		</template> -->
 		<template v-slot:modalHeader>
 			<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ modalTitle }}</h1>
 			<button type="button" class="btn-close" @click="() => {
