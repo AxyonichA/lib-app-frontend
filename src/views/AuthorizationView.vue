@@ -60,7 +60,10 @@ const rules = computed(() => {
 			required: helpers.withMessage("Поле обязательно для заполнения", required),
 			minLength: helpers.withMessage("Длина вашего пароля должна быть не менее 5 символов", minLength(5)), 
 			maxLength: helpers.withMessage("Длина вашего пароля должна быть не более 20 символов", maxLength(20)),
-			regEx: helpers.withMessage("Пароль должен содержать хотя бы одну цифру, один строчный и один заглавный символ, специальный знак, и не содержать пробелов", helpers.regex(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* )$/)) // Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, no space, and it must be 8-16 characters long.
+			regEx: helpers.withMessage(
+				"Пароль должен содержать хотя бы одну цифру, один строчный и один заглавный символ, специальный знак, и не содержать пробелов",
+				helpers.regex(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* )/)
+			)
 		},
 		passwordConfirm: { 
 			required: helpers.withMessage("Поле обязательно для заполнения", required),
