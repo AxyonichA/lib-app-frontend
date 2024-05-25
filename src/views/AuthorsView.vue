@@ -3,6 +3,7 @@ import { onBeforeMount, ref } from "vue"
 import { RouterLink } from 'vue-router'
 
 import Modal from '../components/Modal.vue'
+import Input from '../components/Input.vue';
 import { getAuthors, createAuthor, deleteAuthor } from '../requests/authorReq';
 
 let authors = ref([])
@@ -38,10 +39,7 @@ onBeforeMount(async() => {
 		</template>
 		<template v-slot:modalBody>
 			<form class="p-2 border border-2 border-primary rounded ">
-				<label class="d-block">
-					<p class="m-1">Имя автора:</p>
-					<input type='text' v-model.trim="editedAuthor" class="w-100 form-control fs-5" />              
-				</label>
+				<Input type="text" label="Имя автора" v-model:model="editedAuthor" class="w-100 form-control fs-5"/>
 			</form>
 		</template>
 		<template v-slot:modalFooter>

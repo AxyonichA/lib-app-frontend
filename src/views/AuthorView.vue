@@ -2,8 +2,8 @@
 import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router';
 
-import EditPostForm from '../components/EditPostForm.vue'
-import PostList from "../components/PostList.vue"
+import EditBookForm from '../components/EditBookForm.vue'
+import BookList from "../components/BookList.vue"
 
 import { getAuthors, getAuthorBooks } from '../requests/authorReq';
 
@@ -28,8 +28,8 @@ onBeforeMount(async() => {
 </script>
 
 <template>
-	<EditPostForm :authors  :authorId v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
+	<EditBookForm :authors  :authorId v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
 	<h1>{{ name }}</h1>
-	<PostList v-if="books.length !== 0"  v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
+	<BookList v-if="books.length !== 0"  v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
 	<p v-if="books.length === 0">У данного автора ещё нет публикаций</p>
 </template>

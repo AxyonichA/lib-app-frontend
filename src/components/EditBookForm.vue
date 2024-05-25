@@ -3,6 +3,7 @@ import { getBooks, bookAdd, bookUpdate } from '../requests/booksReq';
 import { getAuthorBooks } from '../requests/authorReq';
 
 import Modal from './Modal.vue';
+import Input from './Input.vue'
 
 const books = defineModel('books')
 const editedBook = defineModel('editedBook')
@@ -16,7 +17,7 @@ const props = defineProps({
 	authorId: String
 })
 
-async function handlePostEdit() {
+async function handleBookEdit() {
 	if(!editedBook.value.title || !editedBook.value.body || !editedBook.value.authorID) {
 				return
 		}
@@ -26,7 +27,7 @@ async function handlePostEdit() {
 	modalShow.value = false
 }
 
-function handleAddPostClick() {
+function handleAddBookClick() {
 	if(props.authorId) {
 		editedBook.value.authorID = Number(props.authorId)				
 	}
@@ -41,7 +42,7 @@ function handleAddPostClick() {
 	<Modal v-model:modalShow="modalShow">
 		<template v-slot:modalButton>
 			<div class="d-flex justify-content-center ">
-				<button type="button" @click="handleAddPostClick" class="btn btn-primary w-50">
+				<button type="button" @click="handleAddBookClick" class="btn btn-primary w-50">
 					Добавить книгу
 				</button>		
 			</div>
@@ -55,10 +56,7 @@ function handleAddPostClick() {
 		</template>
 		<template v-slot:modalBody>
 			<form class="p-2 border border-2 border-primary rounded">
-				<label class="d-block">
-					<p class="m-1">Заголовок:</p>
-					<input type='text' v-model.trim="editedBook.title" class="w-100 form-control fs-5" />              
-				</label>
+				<Input type="text" label="Заголовок" v-model:model="editedBook.title" class="w-100 form-control fs-5" />
 				<label class="d-block">
 					<p class="m-1">Текст:</p>
 					<textarea v-model.trim="editedBook.body" class="w-100 form-control fs-6" rows="10"/>               
@@ -73,7 +71,7 @@ function handleAddPostClick() {
 			</form>
 		</template>
 		<template v-slot:modalFooter>
-			<button @click.prevent="async() => await handlePostEdit()" class="btn btn-primary">
+			<button @click.prevent="async() => await handleBookEdit()" class="btn btn-primary">
 				{{ editedBook.id ? 'Обновить' : 'Добавить книгу' }}
 			</button>
 			<button @click.prevent="() => editedBook = {}" class="btn btn-outline-primary">

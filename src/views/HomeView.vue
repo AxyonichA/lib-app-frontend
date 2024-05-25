@@ -1,8 +1,8 @@
 <script setup>
 import { onBeforeMount, ref } from "vue"
 
-import EditPostForm from '../components/EditPostForm.vue';
-import PostList from "../components/PostList.vue"
+import EditBookForm from '../components/EditBookForm.vue';
+import BookList from "../components/BookList.vue"
 
 
 import { getBooks } from '../requests/booksReq';
@@ -24,6 +24,6 @@ onBeforeMount(async() => {
 </script>
 
 <template>
-	<EditPostForm :authors v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
-	<PostList v-model:editedBook="editedBook" v-model:books="books" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow"/>
+	<EditBookForm :authors v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
+	<BookList v-model:editedBook="editedBook" v-model:books="books" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow"/>
 </template>

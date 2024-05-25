@@ -1,26 +1,35 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue'
 import Modal from '../components/Modal.vue';
-
+import Input from '../components/Input.vue';
 import { getUsers, deleteUser, updateUser } from '../requests/usersReq.js'
+import useVuelidate from '@vuelidate/core'
+import { getRules } from '../services/vuelidate.js'
 
 let modalTitle = ref('')
 let modalShow = ref(false)
 
 let users = ref([])
-let editedUser = ref({})
+let editedUser = ref({
+	login: '',
+	nickName: "",
+	role: '',
+	id: ''
+})
 let editedUserOrigin = ref({})
 
 async function handleUpdateUser() {
-	if(!editedUser.value.nickName || !editedUser.value.login || !editedUser.value.role) {
-		console.log('One or more fields are empty!')
+	let validationResult = await v$.value.$validate()
+	if(validationResult) {
+		await updateUser(editedUser.value)
+		users.value = await getUsers()
+		editedUser.value = {}
+		editedUserOrigin.value = {}
+		modalShow.value = false
+	} else {
 		return
 	}
-	await updateUser(editedUser.value)
-	users.value = await getUsers()
-	editedUser.value = {}
-	editedUserOrigin.value = {}
-	modalShow.value = false
+
 }
 
 onBeforeMount(async() => {
@@ -30,6 +39,10 @@ onBeforeMount(async() => {
 		console.log(err)
 	}
 })
+function handleInputTouch(model) {
+	v$.value[model].$touch()
+}
+const v$ = useVuelidate(getRules(editedUser.value), editedUser)
 </script>
 
 <template>
@@ -45,22 +58,10 @@ onBeforeMount(async() => {
 		</template>
 		<template v-slot:modalBody>
 			<form class="p-2 border border-2 border-primary rounded ">
-				<label class="d-block">
-					<p class="m-1">Имя пользователя:</p>
-					<input type='text' v-model.trim="editedUser.nickName" class="w-100 form-control fs-5" />              
-				</label>
-				<label class="d-block">
-					<p class="m-1">Почта:</p>
-					<input type='text' v-model.trim="editedUser.login" class="w-100 form-control fs-5" />              
-				</label>
-				<label class="d-block">
-					<p class="m-1">Роль:</p>
-					<input type='text' v-model.trim="editedUser.role" class="w-100 form-control fs-5" />              
-				</label>
-				<label class="d-block">
-					<p class="m-1">Идентификатор:</p>
-					<input type='text' v-model.trim="editedUser.id" disabled class="w-100 form-control fs-5" />              
-				</label>
+				<Input type="text" label="Имя пользователя" inputID="nickName" class="w-100 form-control fs-5" v-model:model="editedUser.nickName" :error="v$.nickName.$error" :errors="v$.nickName.$errors" @touch="handleInputTouch"/>
+				<Input type="text" label="Почта" inputID="login" class="w-100 form-control fs-5" v-model:model="editedUser.login" :error="v$.login.$error" :errors="v$.login.$errors" @touch="handleInputTouch"/>
+				<Input type="text" label="Роль" inputID="role" class="w-100 form-control fs-5" v-model:model="editedUser.role" :error="v$.role.$error" :errors="v$.role.$errors" @touch="handleInputTouch"/>
+				<Input type="text" label="Идентификатор" :disabled="true" inputID="id" class="w-100 form-control fs-5" v-model:model="editedUser.id" />
 			</form>
 		</template>
 		<template v-slot:modalFooter>

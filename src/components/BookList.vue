@@ -1,7 +1,7 @@
 <script setup>
 import { defineModel } from 'vue';
 
-import Post from './Post.vue'
+import Book from './Book.vue'
 
 import { getBooks, bookDelete } from '../requests/booksReq';
 import { getAuthorBooks } from '../requests/authorReq';
@@ -13,12 +13,12 @@ const modalTitle = defineModel('modalTitle')
 const modalShow = defineModel('modalShow')
 
 
-async function handlePostDelete(book, authorId) {
+async function handleBookDelete(book, authorId) {
 	await bookDelete(book.id);
 	books.value = authorId ? (await getAuthorBooks(authorId))[0] : await getBooks()
 }
 
-function handleChangePostClick(book) {
+function handleChangeBookClick(book) {
 	editedBook.value = {...book}
 	modalTitle.value = 'Редактировать книгу'
 	modalShow.value = true
@@ -28,6 +28,6 @@ function handleChangePostClick(book) {
 
 <template>
 	<section class="row row-cols-2 my-4 border mx-0 border-primary border-2 rounded">
-		<Post v-for="book in books" :book @handleChangePostClick="handleChangePostClick" @handlePostDelete="handlePostDelete" :key="book.id" />
+		<Book v-for="book in books" :book @handleChangeBookClick="handleChangeBookClick" @handleBookDelete="handleBookDelete" :key="book.id" />
 	</section>
 </template>

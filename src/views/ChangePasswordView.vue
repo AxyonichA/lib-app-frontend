@@ -1,16 +1,24 @@
 <script setup>
 import { computed, ref } from 'vue';
+
+import Input from '../components/Input.vue'
+
 import { useAuthStore } from '../stores/useAuthStore';
 import { changeUserPassword } from '../requests/usersReq.js'
 import useVuelidate from '@vuelidate/core'
 import { helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import { clearAllCookies } from '../services/cookies.js'
+import { getRules } from '../services/vuelidate.js'
 
 let router = useRouter()
 let { user } = useAuthStore()
 
-const passwordFields = ref({})
+const passwordFields = ref({
+	oldPassword: "",
+	newPassword: "",
+	passwordConfirm: ""
+})
 async function handlePasswordChange() {
 	let validationResult = await v$.value.$validate()
 	if(validationResult) {
@@ -23,50 +31,18 @@ async function handlePasswordChange() {
 	}
 }
 
-const rules = computed(() => {
-	return {
-		oldPassword: {
-			required
-		},
-		newPassword: {
-			required: helpers.withMessage("Поле обязательно для заполнения", required),
-			minLength: helpers.withMessage("Длина вашего пароля должна быть не менее 5 символов", minLength(5)), 
-			maxLength: helpers.withMessage("Длина вашего пароля должна быть не более 20 символов", maxLength(20)),
-			regEx: helpers.withMessage("Пароль должен содержать хотя бы одну цифру, один строчный и один заглавный символ, специальный знак, и не содержать пробелов", helpers.regex(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* )/))
-		},
-		passwordConfirm: {
-			required: helpers.withMessage("Поле обязательно для заполнения", required),
-			sameAs: helpers.withMessage("Пароли должны совпадать", sameAs(passwordFields.value.newPassword))
-		}
-	}
-})
+function handleInputTouch(model) {
+	v$.value[model].$touch()
+}
 
-const v$ = useVuelidate(rules, passwordFields)
+const v$ = useVuelidate(getRules(passwordFields.value), passwordFields)
 </script>
 
 <template>
 	<form class="p-2 border border-2 border-primary rounded">
-		<label class="d-block">
-			<p>Старый пароль:</p>
-			<input type="text" v-model.trim="passwordFields.oldPassword" @blur="v$.oldPassword.$touch" class="form-control">
-			<div v-if="v$.oldPassword.$error" class="d-flex flex-column">
-				<span v-for="error in v$.oldPassword.$errors" :key="error.$uid" class="text-danger">{{ error.$message }}</span>
-			</div> 
-		</label>
-		<label class="d-block">
-			<p>Новый пароль:</p>
-			<input type="text" v-model.trim="passwordFields.newPassword" @blur="v$.newPassword.$touch" class="form-control">
-			<div v-if="v$.newPassword.$error" class="d-flex flex-column">
-				<span v-for="error in v$.newPassword.$errors" :key="error.$uid" class="text-danger">{{ error.$message }}</span>
-			</div> 
-		</label>
-		<label class="d-block">
-			<p>Повторите новый пароль:</p>
-			<input type="text" v-model.trim="passwordFields.passwordConfirm" class="form-control">
-			<div v-if="v$.passwordConfirm.$error" class="d-flex flex-column">
-				<span v-for="error in v$.passwordConfirm.$errors" :key="error.$uid" class="text-danger">{{ error.$message }}</span>
-			</div> 
-		</label>
+		<Input type="text" label="Старый пароль" inputID="oldPassword" class="form-control" :error="v$.oldPassword.$error" :errors="v$.oldPassword.$errors" @touch="handleInputTouch" v-model:model="passwordFields.oldPassword"/>
+		<Input type="text" label="Новый пароль" inputID="newPassword" class="form-control" :error="v$.newPassword.$error" :errors="v$.newPassword.$errors" @touch="handleInputTouch" v-model:model="passwordFields.newPassword"/>
+		<Input type="text" label="Повторите новый пароль" inputID="passwordConfirm" class="form-control" :error="v$.passwordConfirm.$error" :errors="v$.passwordConfirm.$errors" @touch="handleInputTouch" v-model:model="passwordFields.passwordConfirm"/>
 		<div class="mt-3">
 			<button @click.prevent="async() => {
 				await handlePasswordChange()

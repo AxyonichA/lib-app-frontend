@@ -1,11 +1,16 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useAuthStore } from '../stores/useAuthStore';
-
-import { getUser, updateUser} from '../requests/usersReq.js'
-import { storeToRefs } from 'pinia'
 import useVuelidate from '@vuelidate/core'
 import { email, helpers, maxLength, minLength, required } from '@vuelidate/validators'
+
+import Input from '../components/Input.vue';
+import { getUser, updateUser} from '../requests/usersReq.js'
+
+import { useAuthStore } from '../stores/useAuthStore';
+import { storeToRefs } from 'pinia'
+import { getRules } from '../services/vuelidate.js'
+
+
 let { user } = storeToRefs(useAuthStore())
 let userInfo = ref({...user.value})
 
@@ -22,40 +27,19 @@ async function handleUpdateUser() {
 
 }
 
-const rules = computed(() => {
-	return {
-		login: { 
-			required: helpers.withMessage("Поле обязательно для заполнения", required), 
-			email: helpers.withMessage("Укажите корректный почтовый адрес", email)
-		},
-		nickName: { 
-			required: helpers.withMessage("Поле обязательно для заполнения", required), 
-			minLength: helpers.withMessage("Длина выбираемого никнейма должна быть не менее 5 символов", minLength(5)), 
-			maxLength: helpers.withMessage("Длина выбираемого никнейма должна быть не более 20 символов", maxLength(20))
-		}
-	}
-})
+let v$ = useVuelidate(getRules(userInfo.value), userInfo)
 
-let v$ = useVuelidate(rules, userInfo)
+function handleInputTouch(model) {
+	v$.value[model].$touch()
+}
+
 </script>
 
 <template>
 	<div class="d-flex justify-content-between align-items-center ">
 		<div class="d-flex flex-column ">
-			<label class="d-block">
-				<p class="mt-1">Ваш никнейм:</p>
-				<input type="text" v-model.trim="userInfo.nickName" @blur="v$.nickName.$touch" :readonly="!isEdit" :class="isEdit ? 'form-control' : 'form-control-plaintext ps-3'">
-				<div v-if="v$.nickName.$error" class="d-flex flex-column">
-					<span v-for="error in v$.nickName.$errors" :key="error.$uid" class="text-danger">{{ error.$message }}</span>
-				</div> 
-			</label>
-			<label class="d-block">
-				<p class="mt-1">Ваша почта:</p>
-				<input type="email" v-model.trim="userInfo.login" @blur="v$.nickName.$touch" :readonly="!isEdit" :class="isEdit ? 'form-control' : 'form-control-plaintext ps-3'">
-				<div v-if="v$.login.$error" class="d-flex flex-column">
-					<span v-for="error in v$.login.$errors" :key="error.$uid" class="text-danger">{{ error.$message }}</span>
-				</div> 
-			</label>
+			<Input type="email" label="Почта" inputID="login" :isRead="!isEdit" :class="{ 'form-control': isEdit, 'form-control-plaintext': !isEdit}" :error="v$.login.$error" :errors="v$.login.$errors" @touch="handleInputTouch" v-model:model="userInfo.login"/>
+			<Input type="text" label="Никнейм" inputID="nickName" :isRead="!isEdit" :class="{ 'form-control': isEdit, 'form-control-plaintext': !isEdit}"  :error="v$.nickName.$error" :errors="v$.nickName.$errors" @touch="handleInputTouch" v-model:model="userInfo.nickName"/>
 			<RouterLink to="/profile/changePassword" class="">Изменить пароль</RouterLink>
 		</div>
 		<div>
