@@ -14,7 +14,7 @@ let editedUser = ref({
 	login: '',
 	nickName: "",
 	role: '',
-	id: ''
+	_id: ''
 })
 let editedUserOrigin = ref({})
 
@@ -61,7 +61,7 @@ const v$ = useVuelidate(getRules(editedUser.value), editedUser)
 				<Input type="text" label="Имя пользователя" inputID="nickName" class="w-100 form-control fs-5" v-model:model="editedUser.nickName" :error="v$.nickName.$error" :errors="v$.nickName.$errors" @touch="handleInputTouch"/>
 				<Input type="text" label="Почта" inputID="login" class="w-100 form-control fs-5" v-model:model="editedUser.login" :error="v$.login.$error" :errors="v$.login.$errors" @touch="handleInputTouch"/>
 				<Input type="text" label="Роль" inputID="role" class="w-100 form-control fs-5" v-model:model="editedUser.role" :error="v$.role.$error" :errors="v$.role.$errors" @touch="handleInputTouch"/>
-				<Input type="text" label="Идентификатор" :disabled="true" inputID="id" class="w-100 form-control fs-5" v-model:model="editedUser.id" />
+				<Input type="text" label="Идентификатор" :disabled="true" inputID="id" class="w-100 form-control fs-5" v-model:model="editedUser._id" />
 			</form>
 		</template>
 		<template v-slot:modalFooter>
@@ -77,7 +77,7 @@ const v$ = useVuelidate(getRules(editedUser.value), editedUser)
 			</button>			
 		</template>
 	</Modal>	
-	<section v-for="user in users" :key="user.id" class="row my-3 border mx-0 border-primary border-2 rounded">
+	<section v-for="user in users" :key="user._id" class="row my-3 border mx-0 border-primary border-2 rounded">
 		<div class="d-flex justify-content-between align-items-center ">
 			<div class="d-flex flex-column ">
 				<span>{{ user.nickName }}</span>
@@ -92,7 +92,7 @@ const v$ = useVuelidate(getRules(editedUser.value), editedUser)
 					modalTitle = 'Редактировать данные пользователя'
 				}" class="btn btn-secondary">Редактировать</button>			
 				<button @click.prevent="async () => {
-					await deleteUser(user.id)
+					await deleteUser(user._id)
 					users = await getUsers()
 				}" class="btn btn-danger">Удалить пользователя</button>					
 			</div>

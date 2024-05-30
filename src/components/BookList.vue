@@ -14,8 +14,8 @@ const modalShow = defineModel('modalShow')
 
 
 async function handleBookDelete(book, authorId) {
-	await bookDelete(book.id);
-	books.value = authorId ? (await getAuthorBooks(authorId))[0] : await getBooks()
+	await bookDelete(book._id);
+	books.value = authorId ? (await getAuthorBooks(authorId)) : await getBooks()
 }
 
 function handleChangeBookClick(book) {
@@ -28,6 +28,6 @@ function handleChangeBookClick(book) {
 
 <template>
 	<section class="row row-cols-2 my-4 border mx-0 border-primary border-2 rounded">
-		<Book v-for="book in books" :book @handleChangeBookClick="handleChangeBookClick" @handleBookDelete="handleBookDelete" :key="book.id" />
+		<Book v-for="book in books" :book="book" @handleChangeBookClick="handleChangeBookClick" @handleBookDelete="handleBookDelete" :key="book.id" />
 	</section>
 </template>

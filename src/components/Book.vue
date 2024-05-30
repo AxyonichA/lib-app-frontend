@@ -1,6 +1,9 @@
 <script setup>
 import { useRoute } from 'vue-router'
 
+import { useAuthStore } from '../stores/useAuthStore';
+const { user } = useAuthStore()
+
 let route = useRoute()
 let {authorId} = route.params
 
@@ -20,7 +23,7 @@ defineEmits([
 			<h2 class="my-auto">{{book.title}}</h2>
 			<p class="h-50 overflow-hidden align-content-center ">{{book.body}}</p>
 			<span v-if="!authorId" class="ms-auto fs-5">{{ book.authorName }}</span>
-			<button @click.prevent="() => $emit('handleBookDelete', book, authorId)" class="btn btn-danger">Удалить книгу</button>
-			<button @click.prevent="() => $emit('handleChangeBookClick', book)" class="btn btn-secondary mt-1">Редактировать</button>
+			<button v-if="user.role === 'admin'" @click.prevent="() => $emit('handleBookDelete', book, authorId)" class="btn btn-danger">Удалить книгу</button>
+			<button v-if="user.role === 'admin'" @click.prevent="() => $emit('handleChangeBookClick', book)" class="btn btn-secondary mt-1">Редактировать</button>
 		</article>
 </template>

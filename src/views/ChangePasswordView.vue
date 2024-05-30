@@ -20,15 +20,22 @@ const passwordFields = ref({
 	passwordConfirm: ""
 })
 async function handlePasswordChange() {
-	let validationResult = await v$.value.$validate()
-	if(validationResult) {
-		await changeUserPassword(user.id, passwordFields.value.oldPassword, passwordFields.value.newPassword)
-		passwordFields.value = {}
-		clearAllCookies()
-		router.push({path: '/authorization'})
-	} else {
-		return
+	try {
+		let validationResult = await v$.value.$validate()
+		if(validationResult) {
+			await changeUserPassword(user._id, passwordFields.value.oldPassword, passwordFields.value.newPassword)
+			passwordFields.value = {}
+			clearAllCookies()
+			console.log('cleared');			
+			router.push({path: '/authorization'})
+
+		} else {
+			return
+		}		
+	} catch (err) {
+		console.log(err);
 	}
+
 }
 
 function handleInputTouch(model) {

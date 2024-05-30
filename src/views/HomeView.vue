@@ -24,6 +24,6 @@ onBeforeMount(async() => {
 </script>
 
 <template>
-	<EditBookForm :authors v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
+	<EditBookForm :authors="authors" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" v-model:books="books"/>
 	<BookList v-model:editedBook="editedBook" v-model:books="books" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow"/>
 </template>

@@ -21,7 +21,7 @@ async function handleUpdateUser() {
 	let validationResult = v$.value.$validate()
 	if(validationResult) {
 		await updateUser(userInfo.value)
-		await getUser(user.value.id)
+		await getUser(user.value._id)
 		isEdit.value = false		
 	}
 
@@ -38,8 +38,8 @@ function handleInputTouch(model) {
 <template>
 	<div class="d-flex justify-content-between align-items-center ">
 		<div class="d-flex flex-column ">
-			<Input type="email" label="Почта" inputID="login" :isRead="!isEdit" :class="{ 'form-control': isEdit, 'form-control-plaintext': !isEdit}" :error="v$.login.$error" :errors="v$.login.$errors" @touch="handleInputTouch" v-model:model="userInfo.login"/>
-			<Input type="text" label="Никнейм" inputID="nickName" :isRead="!isEdit" :class="{ 'form-control': isEdit, 'form-control-plaintext': !isEdit}"  :error="v$.nickName.$error" :errors="v$.nickName.$errors" @touch="handleInputTouch" v-model:model="userInfo.nickName"/>
+			<Input type="email" label="Почта" inputID="login" :isRead="!isEdit" :class="{ 'form-control': isEdit, 'form-control-plaintext ms-2': !isEdit}" :error="v$.login.$error" :errors="v$.login.$errors" @touch="handleInputTouch" v-model:model="userInfo.login"/>
+			<Input type="text" label="Никнейм" inputID="nickName" :isRead="!isEdit" :class="{ 'form-control': isEdit, 'form-control-plaintext ms-2': !isEdit}"  :error="v$.nickName.$error" :errors="v$.nickName.$errors" @touch="handleInputTouch" v-model:model="userInfo.nickName"/>
 			<RouterLink to="/profile/changePassword" class="">Изменить пароль</RouterLink>
 		</div>
 		<div>

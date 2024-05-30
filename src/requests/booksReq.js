@@ -18,7 +18,8 @@ async function bookAdd(editedBook) {
 
 async function bookUpdate(editedBook) {
 	try {
-		await axios.put(`/api/books/${editedBook.id}`, {...editedBook})
+		console.log(editedBook);
+		await axios.patch(`/api/books/${editedBook._id}`, {...editedBook})
 	} catch (err) {
 		console.log(err)
 	}

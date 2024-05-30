@@ -2,15 +2,16 @@
 import { getBooks, bookAdd, bookUpdate } from '../requests/booksReq';
 import { getAuthorBooks } from '../requests/authorReq';
 
+import { useAuthStore } from '../stores/useAuthStore';
+
 import Modal from './Modal.vue';
 import Input from './Input.vue'
 
+const { user } = useAuthStore()
 const books = defineModel('books')
 const editedBook = defineModel('editedBook')
-
 const modalShow = defineModel('modalShow')
 const modalTitle = defineModel('modalTitle')
-
 
 const props = defineProps({
 	authors: Array,
@@ -18,18 +19,30 @@ const props = defineProps({
 })
 
 async function handleBookEdit() {
-	if(!editedBook.value.title || !editedBook.value.body || !editedBook.value.authorID) {
-				return
+	try {
+		if(!editedBook.value.title || !editedBook.value.body || !editedBook.value.authorID) {
+			return
 		}
-	editedBook.value.id ? await bookUpdate(editedBook.value) : await bookAdd(editedBook.value)
-	editedBook.value = {}
-	books.value = props.authorId ? (await getAuthorBooks(props.authorId))[0] : await getBooks()
-	modalShow.value = false
+		let searchedAuthor = props.authors.find((author) => author._id == editedBook.value.authorID)
+		editedBook.value.authorName = searchedAuthor.name
+		if(editedBook.value._id) {
+			await bookUpdate(editedBook.value)
+		} else {
+			await bookAdd(editedBook.value)
+		}
+
+		editedBook.value = {}
+		books.value = props.authorId ? (await getAuthorBooks(props.authorId)) : await getBooks()
+		modalShow.value = false		
+	} catch (err) {
+		console.log(err);
+	}
+
 }
 
 function handleAddBookClick() {
 	if(props.authorId) {
-		editedBook.value.authorID = Number(props.authorId)				
+		editedBook.value.authorID = props.authorId
 	}
 	modalTitle.value = 'Добавить книгу'
 	modalShow.value = true	
@@ -40,7 +53,7 @@ function handleAddBookClick() {
 
 
 	<Modal v-model:modalShow="modalShow">
-		<template v-slot:modalButton>
+		<template v-if="user.role === 'admin'" v-slot:modalButton>
 			<div class="d-flex justify-content-center ">
 				<button type="button" @click="handleAddBookClick" class="btn btn-primary w-50">
 					Добавить книгу
@@ -63,16 +76,18 @@ function handleAddBookClick() {
 				</label>
 				<label class="d-block">
 					<p class="m-1">Имя автора:</p>
-					<select @change="(e) => editedBook.authorID = e.target.value" :disabled="authorId && !editedBook.id ? true : false" class="form-select">
+					<select @change="(e) => {
+						editedBook.authorID = e.target.value
+					}" :disabled="authorId && !editedBook._id ? true : false" class="form-select">
 						<option v-if="!editedBook.authorID" selected>Выбрать автора:</option>
-						<option v-for="author in authors" :value="author.id" :key="author.id" :selected="editedBook.authorID === author.id ? true : false">{{ author.name }}</option>
+						<option v-for="author in authors" :value="author._id" :key="author._id" :selected="editedBook.authorID === author._id ? true : false">{{ author.name }}</option>
 					</select>              
 				</label>
 			</form>
 		</template>
 		<template v-slot:modalFooter>
 			<button @click.prevent="async() => await handleBookEdit()" class="btn btn-primary">
-				{{ editedBook.id ? 'Обновить' : 'Добавить книгу' }}
+				{{ editedBook._id ? 'Обновить' : 'Добавить книгу' }}
 			</button>
 			<button @click.prevent="() => editedBook = {}" class="btn btn-outline-primary">
 				Очистить

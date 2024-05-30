@@ -2,14 +2,30 @@
 import { onBeforeMount, ref } from "vue"
 import { RouterLink } from 'vue-router'
 
+import { useAuthStore } from '../stores/useAuthStore';
+
+
 import Modal from '../components/Modal.vue'
 import Input from '../components/Input.vue';
 import { getAuthors, createAuthor, deleteAuthor } from '../requests/authorReq';
 
+const { user } = useAuthStore()
 let authors = ref([])
-let editedAuthor = ref('')
+let editedAuthor = ref({
+	name: ''
+})
 let modalTitle = ref('')
 let modalShow = ref(false)
+
+async function handleAuthorCreate() {
+	if(!editedAuthor.value.name) {
+		return
+	}
+	await createAuthor(editedAuthor.value)
+	authors.value = await getAuthors()
+	editedAuthor.value = {}
+	modalShow.value = false
+}
 
 onBeforeMount(async() => {
 	authors.value = await getAuthors()
@@ -21,7 +37,7 @@ onBeforeMount(async() => {
 
 	<Modal v-model:modalShow="modalShow">
 		<template v-slot:modalButton>
-			<div class="d-flex justify-content-center ">
+			<div  v-if="user.role === 'admin'" class="d-flex justify-content-center ">
 				<button type="button" @click="() => {
 					modalTitle = 'Добавить автора'
 					modalShow = true
@@ -34,38 +50,30 @@ onBeforeMount(async() => {
 			<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ modalTitle }}</h1>
 			<button type="button" class="btn-close" @click="() => {
 				modalShow = false
-				editedAuthor = ''
+				editedAuthor = {}
 			}">Закрыть</button>
 		</template>
 		<template v-slot:modalBody>
 			<form class="p-2 border border-2 border-primary rounded ">
-				<Input type="text" label="Имя автора" v-model:model="editedAuthor" class="w-100 form-control fs-5"/>
+				<Input type="text" inputID="name" label="Имя автора" v-model:model="editedAuthor.name" class="w-100 form-control fs-5"/>
 			</form>
 		</template>
 		<template v-slot:modalFooter>
-			<button @click.prevent="async () => {
-				if(!editedAuthor) {
-					return
-				}
-				await createAuthor(editedAuthor)
-				authors = await getAuthors()
-				editedAuthor = ''
-				modalShow = false
-			}" class="btn btn-primary">
+			<button @click.prevent="handleAuthorCreate" class="btn btn-primary">
 				Добавить автора
 			</button>
 			<button @click.prevent="() => {
-				editedAuthor = ''
+				editedAuthor = {}
 			}" class="btn btn-outline-primary">
 				Очистить
 			</button>			
 		</template>
 	</Modal>	
-	<section v-for="author in authors" :key="author.id" class="row my-4 border mx-0 border-primary border-2 rounded">
+	<section v-for="author in authors" :key="author._id" class="row my-4 border mx-0 border-primary border-2 rounded">
 		<div class="d-flex justify-content-between align-items-center ">
-				<RouterLink :to="`/authors/${author.id}/books`" :key="author.id" class="fs-4">{{author.name}}</RouterLink>
-				<button @click.prevent="async () => {
-					await deleteAuthor(author.id)
+				<RouterLink :to="`/authors/${author._id}/books`" :key="author._id" class="fs-4">{{author.name}}</RouterLink>
+				<button  v-if="user.role === 'admin'" @click.prevent="async () => {
+					await deleteAuthor(author._id)
 					authors = await getAuthors()
 				}" class="btn btn-danger">Удалить автора</button>			
 		</div>

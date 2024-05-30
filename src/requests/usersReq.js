@@ -33,7 +33,7 @@ async function deleteUser(id) {
 
 async function updateUser(editedUser) {
 	try {
-		const response = await axios.put(`/api/users/${editedUser.id}`, {...editedUser})
+		const response = await axios.patch(`/api/users/${editedUser._id}`, {...editedUser})
 		console.log(response.data.msg)
 	} catch (err) {
 		console.log(err);
@@ -42,7 +42,9 @@ async function updateUser(editedUser) {
 
 async function changeUserPassword(userID, oldPassword, newPassword) {
 	try {
-		await axios.put(`/api/users/${userID}/changePassword`, {oldPassword, newPassword})
+		console.log('not patched');
+		await axios.patch(`/api/users/${userID}/changePassword`, {oldPassword, newPassword})
+		console.log('patched');
 	} catch (err) {
 		console.log(err);
 	}

@@ -15,7 +15,7 @@ export function getRules(model) {
 			},
 			role: {
 				required: model.role === "" ? helpers.withMessage("Поле обязательно для заполнения", required) : false,
-				sameAs: helpers.withMessage("Роль должна существовать", or(sameAs("admin"), sameAs("user")) )
+				sameAs: model.role === "" ? helpers.withMessage("Роль должна существовать", or(sameAs("admin"), sameAs("user"))) : false
 			},
 			oldPassword: {
 				required: model.oldPassword === "" ? helpers.withMessage("Поле обязательно для заполнения", required) : false

@@ -11,8 +11,7 @@ async function getAuthors() {
 
 async function createAuthor(editedAuthor) {
 	try {
-		console.log(editedAuthor)
-		await axios.post("/api/authors", {editedAuthor})
+		await axios.post("/api/authors", {...editedAuthor})
 	}	catch (err) {
 		console.log(err)
 	}
@@ -28,8 +27,7 @@ async function deleteAuthor(id) {
 async function getAuthorBooks(id) {
 	try {
 		const response = await axios(`/api/authors/${id}/books`)
-		const {authorBooks, name} = response.data
-		return [authorBooks, name]
+		return response.data
 	} catch (err) {
 		console.log(err)
 	}
