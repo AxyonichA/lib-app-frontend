@@ -1,12 +1,19 @@
 <script setup>
-import { storeToRefs } from 'pinia';
-import { useAuthStore } from './stores/useAuthStore';
-import { clearAllCookies } from './services/cookies'
 import { useRouter } from 'vue-router'
 
+import { clearAllCookies } from './services/cookies'
+
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from './stores/useAuthStore';
 const { user } = storeToRefs(useAuthStore())
 
 const router = useRouter()
+
+function handleUserUnlogin() {
+	user.value = null
+	clearAllCookies()
+	router.push('/authorization')
+}
 </script>
 
 <template>
@@ -18,16 +25,10 @@ const router = useRouter()
 			<RouterLink v-if="user?.role === 'admin'" to="/admin" class="">Admin</RouterLink>
 		</nav>
 	
-		<button v-if="!user"  type="button" class="btn btn-bs-white border border-1 border-primary position-absolute end-0 align-self-center translate-middle-x">
+		<button v-if="!user" type="button" class="btn btn-bs-white border border-1 border-primary position-absolute end-0 align-self-center translate-middle-x">
 			<RouterLink to="/authorization" class="">Войти</RouterLink>
 		</button>		
-		<button v-if="user" @click="() => {
-			console.log(user)
-			user = null
-			console.log(user)
-			clearAllCookies()
-			router.push('/authorization')
-		}"  type="button" class="btn btn-bs-white border border-1 border-primary position-absolute end-0 align-self-center translate-middle-x">
+		<button v-if="user" @click="handleUserUnlogin" type="button" class="btn btn-bs-white border border-1 border-primary position-absolute end-0 align-self-center translate-middle-x">
 			Выйти
 		</button>			
 	</header>

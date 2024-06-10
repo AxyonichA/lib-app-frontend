@@ -1,32 +1,37 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import useVuelidate from '@vuelidate/core'
-import { email, helpers, maxLength, minLength, required } from '@vuelidate/validators'
 
 import Input from '../components/Input.vue';
 import { getUser, updateUser} from '../requests/usersReq.js'
+import { getRules } from '../services/vuelidate.js'
 
 import { useAuthStore } from '../stores/useAuthStore';
 import { storeToRefs } from 'pinia'
-import { getRules } from '../services/vuelidate.js'
-
 
 let { user } = storeToRefs(useAuthStore())
+
 let userInfo = ref({...user.value})
 
 let isEdit = ref(false)
 
 
 async function handleUpdateUser() {
-	let validationResult = v$.value.$validate()
-	if(validationResult) {
-		await updateUser(userInfo.value)
-		await getUser(user.value._id)
-		isEdit.value = false		
+	try {
+		let validationResult = v$.value.$validate()
+		if(validationResult) {
+			await updateUser(userInfo.value)
+			await getUser(user.value._id)
+			isEdit.value = false		
+		}		
+	} catch (err) {
+		console.log(err);
 	}
-
 }
 
+function editToggle() {
+	isEdit.value = !isEdit.value
+}
 let v$ = useVuelidate(getRules(userInfo.value), userInfo)
 
 function handleInputTouch(model) {
@@ -43,13 +48,10 @@ function handleInputTouch(model) {
 			<RouterLink to="/profile/changePassword" class="">Изменить пароль</RouterLink>
 		</div>
 		<div>
-			<button @click.prevent="isEdit = !isEdit" class="btn btn-primary">
+			<button @click.prevent="editToggle" class="btn btn-primary">
 				{{ isEdit ? 'Отмена' : 'Редактировать профиль'}}
 			</button>
-			<button @click.prevent="async () => {
-				await handleUpdateUser()
-			}" class="btn btn-secondary">Сохранить изменения</button>				
+			<button @click.prevent="handleUpdateUser" class="btn btn-secondary">Сохранить изменения</button>				
 		</div>
-
 	</div>
 </template>

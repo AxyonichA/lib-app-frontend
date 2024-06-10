@@ -1,41 +1,43 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router'
 
 import Input from '../components/Input.vue'
 
-import { useAuthStore } from '../stores/useAuthStore';
-import { changeUserPassword } from '../requests/usersReq.js'
 import useVuelidate from '@vuelidate/core'
-import { helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
-import { useRouter } from 'vue-router'
+
+import { changeUserPassword } from '../requests/usersReq.js'
 import { clearAllCookies } from '../services/cookies.js'
 import { getRules } from '../services/vuelidate.js'
 
+import { useAuthStore } from '../stores/useAuthStore';
+import { storeToRefs } from 'pinia'
+
+let { user } = storeToRefs(useAuthStore())  
+
 let router = useRouter()
-let { user } = useAuthStore()
 
 const passwordFields = ref({
 	oldPassword: "",
 	newPassword: "",
 	passwordConfirm: ""
 })
+
 async function handlePasswordChange() {
 	try {
 		let validationResult = await v$.value.$validate()
 		if(validationResult) {
-			await changeUserPassword(user._id, passwordFields.value.oldPassword, passwordFields.value.newPassword)
-			passwordFields.value = {}
+			await changeUserPassword(user.value._id, passwordFields.value)	
 			clearAllCookies()
-			console.log('cleared');			
-			router.push({path: '/authorization'})
-
+			user.value = null
+			passwordFields.value = {}
+			router.push({path: '/authorization'})			
 		} else {
 			return
 		}		
 	} catch (err) {
 		console.log(err);
 	}
-
 }
 
 function handleInputTouch(model) {
@@ -51,9 +53,7 @@ const v$ = useVuelidate(getRules(passwordFields.value), passwordFields)
 		<Input type="text" label="Новый пароль" inputID="newPassword" class="form-control" :error="v$.newPassword.$error" :errors="v$.newPassword.$errors" @touch="handleInputTouch" v-model:model="passwordFields.newPassword"/>
 		<Input type="text" label="Повторите новый пароль" inputID="passwordConfirm" class="form-control" :error="v$.passwordConfirm.$error" :errors="v$.passwordConfirm.$errors" @touch="handleInputTouch" v-model:model="passwordFields.passwordConfirm"/>
 		<div class="mt-3">
-			<button @click.prevent="async() => {
-				await handlePasswordChange()
-			}" class="btn btn-primary">
+			<button @click.prevent="handlePasswordChange" class="btn btn-primary">
 				Обновить пароль
 			</button>				
 		</div>

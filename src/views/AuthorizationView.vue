@@ -1,14 +1,15 @@
 <script setup>
-import {computed, ref} from 'vue'
-
-import { signin, signup } from '../requests/auth.js';
-import Input from '../components/Input.vue'
-import { storeToRefs } from 'pinia'
-import { useAuthStore } from '../stores/useAuthStore.js';
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
-import { email, helpers, maxLength, minLength, required, requiredIf, sameAs } from '@vuelidate/validators'
 
+import Input from '../components/Input.vue'
+
+import { signin, signup } from '../requests/auth.js';
+import { getRules } from '../services/vuelidate.js';
+
+import { useAuthStore } from '../stores/useAuthStore.js';
+import { storeToRefs } from 'pinia'
 let { user } = storeToRefs(useAuthStore())
 
 const router = useRouter()
@@ -28,7 +29,6 @@ async function handleSignIn(userData) {
 	let data = await signin(userData)
 	if(data) {
 		user.value = data.user
-		console.log(user.value)
 		document.cookie = `token=${data.token}`
 		console.log(data.msg)
 		router.push({path: '/'})
@@ -55,7 +55,7 @@ function handleInputTouch(model) {
 	v$.value[model].$touch()
 }
 
-import { getRules } from '../services/vuelidate.js';
+
 const v$ = useVuelidate(getRules(userData.value), userData)
 </script>
 
@@ -73,9 +73,7 @@ const v$ = useVuelidate(getRules(userData.value), userData)
 		}" class="btn btn-primary">
 			{{registration ? 'Зарегистрироваться' : 'Войти'}}
 		</button>
-		<button @click.prevent="() => {
-			userData = {}
-		}" class="btn btn-outline-primary">
+		<button @click.prevent="userData = {}" class="btn btn-outline-primary">
 			Очистить
 		</button>						
 	</div>

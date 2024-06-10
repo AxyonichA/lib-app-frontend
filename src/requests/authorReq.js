@@ -2,7 +2,7 @@ import axios from 'axios'
 
 async function getAuthors() {
 	try {
-		const response = await axios("/api/authors")
+		const response = await axios.get("/api/authors")
 		return response.data
 	} catch (err) {
 		console.log(err)
@@ -11,11 +11,19 @@ async function getAuthors() {
 
 async function createAuthor(editedAuthor) {
 	try {
-		await axios.post("/api/authors", {...editedAuthor})
+		const response = await axios.post("/api/authors", {...editedAuthor})
+		return response.data
 	}	catch (err) {
 		console.log(err)
 	}
 }
+// async function createAuthor(editedAuthor) {
+// 	try {
+// 		await axios.post("/api/authors", {...editedAuthor})
+// 	}	catch (err) {
+// 		console.log(err)
+// 	}
+// }
 
 async function deleteAuthor(id) {
 	try {

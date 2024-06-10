@@ -1,9 +1,11 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+
 import Modal from '../components/Modal.vue';
 import Input from '../components/Input.vue';
+
 import { getUsers, deleteUser, updateUser } from '../requests/usersReq.js'
-import useVuelidate from '@vuelidate/core'
 import { getRules } from '../services/vuelidate.js'
 
 let modalTitle = ref('')
@@ -23,15 +25,26 @@ async function handleUpdateUser() {
 	if(validationResult) {
 		await updateUser(editedUser.value)
 		users.value = await getUsers()
-		editedUser.value = {}
-		editedUserOrigin.value = {}
-		modalShow.value = false
+		closeModal()
 	} else {
 		return
 	}
-
 }
-
+async function handleUserDelete(userID) {
+	await deleteUser(userID)
+	users.value = await getUsers()
+}
+function closeModal() {
+	modalShow.value = false
+	editedUser.value = {}
+	editedUserOrigin.value = {}	
+}
+function openModal(user) {
+	editedUser.value = {...user}
+	editedUserOrigin.value = {...user}
+	modalShow.value = true
+	modalTitle.value = 'Редактировать данные пользователя'
+}
 onBeforeMount(async() => {
 	try {
 		users.value = await getUsers() 		
@@ -39,6 +52,7 @@ onBeforeMount(async() => {
 		console.log(err)
 	}
 })
+
 function handleInputTouch(model) {
 	v$.value[model].$touch()
 }
@@ -46,15 +60,10 @@ const v$ = useVuelidate(getRules(editedUser.value), editedUser)
 </script>
 
 <template>
-	
 	<Modal v-model:modalShow="modalShow">
 		<template v-slot:modalHeader>
 			<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ modalTitle }}</h1>
-			<button type="button" class="btn-close" @click="() => {
-				modalShow = false
-				editedUser = {}
-				editedUserOrigin = {}
-			}">Закрыть</button>
+			<button type="button" class="btn-close" @click="closeModal">Закрыть</button>
 		</template>
 		<template v-slot:modalBody>
 			<form class="p-2 border border-2 border-primary rounded ">
@@ -65,14 +74,10 @@ const v$ = useVuelidate(getRules(editedUser.value), editedUser)
 			</form>
 		</template>
 		<template v-slot:modalFooter>
-			<button @click.prevent="async() => {
-				await handleUpdateUser()
-			}" class="btn btn-primary">
+			<button @click.prevent="handleUpdateUser" class="btn btn-primary">
 				Сохранить
 			</button>
-			<button @click.prevent="() => {
-				editedUser = {...editedUserOrigin}
-			}" class="btn btn-outline-primary">
+			<button @click.prevent="editedUser = {...editedUserOrigin}" class="btn btn-outline-primary">
 				Очистить
 			</button>			
 		</template>
@@ -85,16 +90,8 @@ const v$ = useVuelidate(getRules(editedUser.value), editedUser)
 				<span>{{ user.role }}	</span>					
 			</div>
 			<div>
-				<button @click.prevent="async () => {
-					editedUser = {...user}
-					editedUserOrigin = {...user}
-					modalShow = true
-					modalTitle = 'Редактировать данные пользователя'
-				}" class="btn btn-secondary">Редактировать</button>			
-				<button @click.prevent="async () => {
-					await deleteUser(user._id)
-					users = await getUsers()
-				}" class="btn btn-danger">Удалить пользователя</button>					
+				<button @click.prevent="async() => openModal(user)" class="btn btn-secondary">Редактировать</button>			
+				<button @click.prevent="async () => await handleUserDelete(user._id)" class="btn btn-danger">Удалить пользователя</button>					
 			</div>
 	
 		</div>

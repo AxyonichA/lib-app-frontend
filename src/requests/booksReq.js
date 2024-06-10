@@ -10,7 +10,8 @@ async function bookDelete(id) {
 
 async function bookAdd(editedBook) {
 	try {
-		await axios.post('/api/books', {...editedBook})
+		const response = await axios.post('/api/books', {...editedBook})
+		return response.data
 	} catch (err) {
 		console.log(err)
 	}
@@ -25,9 +26,11 @@ async function bookUpdate(editedBook) {
 	}
 }
 
-let getBooks = async() => {
+const getBooks = async() => {
 	try {
 		let response = await axios.get("/api/books")
+		console.log(response.data);
+		console.log('getBooksReq');
 		return response.data			
 	} catch(err) {
 		console.log(err)

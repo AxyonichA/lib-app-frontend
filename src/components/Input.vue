@@ -1,6 +1,5 @@
 <script setup>
-import { readonly } from 'vue'
-
+let model = defineModel('model')
 
 defineProps({
 	type: String,
@@ -11,7 +10,7 @@ defineProps({
 	error: Boolean,
 	errors: Array
 })
-let model = defineModel('model')
+
 defineEmits([
 	'touch'
 ])
