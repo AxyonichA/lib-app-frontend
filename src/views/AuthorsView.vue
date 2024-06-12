@@ -107,11 +107,13 @@ onBeforeMount(async() => {
 				Очистить
 			</button>			
 		</template>
-	</Modal>	
-	<section v-for="author in authors" :key="author._id" class="row my-4 border mx-0 border-primary border-2 rounded">
-		<div class="d-flex justify-content-between align-items-center ">
-				<RouterLink :to="`/authors/${author._id}/books`" :key="author._id" class="fs-4">{{author.name}}</RouterLink>
-				<img v-for="photo in author.photoes" :src="`${Backend_URL}/${photo.file_storage_link}`" :key="photo._id" class="w-50"/>
+	</Modal>
+	<section class="row row-cols-3 my-4 border mx-0 border-primary border-2 rounded">
+		<div v-for="author in authors" :key="author._id"  class="col d-flex flex-column justify-content-between align-items-center border border-primary" >
+				<RouterLink :to="`/authors/${author._id}/books`" :key="author._id" class="fs-4 text-center">
+					<img v-for="photo in author.photoes" :src="`${Backend_URL}/${photo.file_storage_link}`" :key="photo._id" class="w-100"/>
+					<p>{{author.name}}</p>
+				</RouterLink>
 				<button  v-if="user.role === 'admin'" @click.prevent="async () => await handleAuthorDelete(author._id)" class="btn btn-danger">Удалить автора</button>			
 		</div>
 	</section>

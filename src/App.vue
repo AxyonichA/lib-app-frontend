@@ -37,3 +37,10 @@ function handleUserUnlogin() {
 	</main>
 
 </template>
+
+<style>
+#app {
+	min-height: 100vh;
+	background-color: #F5F6ED;
+}
+</style>

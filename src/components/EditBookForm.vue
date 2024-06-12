@@ -23,8 +23,7 @@ const props = defineProps({
 })
 
 defineEmits([
-	"handleBookEdit",
-	"handleAuthorBookEdit"
+	"handleBookEdit"
 ])
 
 function openModal() {
@@ -71,7 +70,7 @@ function closeModal() {
 			</form>
 		</template>
 		<template v-slot:modalFooter>
-			<button @click.prevent="async() => $emit(props.authorId ? 'handleAuthorBookEdit' : 'handleBookEdit', fileHandler.selectedFile.value, closeModal)" class="btn btn-primary">
+			<button @click.prevent="async() => $emit('handleBookEdit', fileHandler.selectedFile.value, closeModal)" class="btn btn-primary">
 				{{ editedBook._id ? 'Обновить' : 'Добавить книгу' }}
 			</button>
 			<button @click.prevent="() => editedBook = {}" class="btn btn-outline-primary">
