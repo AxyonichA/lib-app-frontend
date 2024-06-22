@@ -21,6 +21,7 @@ defineEmits([
 </script>
 
 <template>
+	<RouterLink :to="`/books/${book._id}`" :key="book._id">
 		<article class="col d-flex flex-column p-3 text-center border border-primary" style="height: 450px">
 			<img v-for="photo in book.photoes" :src="`${Backend_URL}/${photo.file_storage_link}`" :key="photo._id" class="w-50"/>
 			<h2 class="my-auto">{{book.title}}</h2>
@@ -29,4 +30,6 @@ defineEmits([
 			<button v-if="user.role === 'admin'" @click.prevent="() => $emit('handleBookDelete', book, authorId)" class="btn btn-danger">Удалить книгу</button>
 			<button v-if="user.role === 'admin'" @click.prevent="() => $emit('handleChangeBookClick', book)" class="btn btn-secondary mt-1">Редактировать</button>
 		</article>
+	</RouterLink>
+
 </template>

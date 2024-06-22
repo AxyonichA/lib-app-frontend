@@ -12,12 +12,22 @@ import { useAuthStore } from '../stores/useAuthStore';
 import AdminView from '../views/AdminView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import ChangePasswordView from '../views/ChangePasswordView.vue'
+import BookList from '../components/BookList.vue'
+import BookView from '../views/BookView.vue'
 
 
 const routes = [ 
 	{ path: '/', name: 'home', component: HomeView},
+	{ path: '/books/:bookID', component: BookView},
 	{ path: '/authors', name: 'authors', component: AuthorsView},
-	{ path: '/authors/:authorId/books', name:'authorBooks', component: AuthorView},
+	{ path: '/authors/:authorId', component: AuthorView,
+		children: [
+			{
+			path:'books',
+			component: BookList
+			}
+		]
+	},
 	{ path: '/authorization', name:'authorization', component: AuthorizationView},
 	{ path: '/admin', name:'admin', component: AdminView},
 	{ path: '/profile', name:'profile', component: ProfileView},

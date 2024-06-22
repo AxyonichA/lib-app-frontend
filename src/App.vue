@@ -41,6 +41,6 @@ function handleUserUnlogin() {
 <style>
 #app {
 	min-height: 100vh;
-	background-color: #F5F6ED;
+	background-image: linear-gradient(to right,#D5AA72,#e68c0e);
 }
 </style>

@@ -37,4 +37,12 @@ const getBooks = async() => {
 	}
 }
 
-export {getBooks, bookAdd, bookUpdate, bookDelete}
+const getBook = async(bookID) => {
+	try {
+		let response = await axios.get(`/api/books/${bookID}`)
+		return response.data
+	} catch (err) {
+		console.log(err);
+	}
+}
+export {getBooks, getBook, bookAdd, bookUpdate, bookDelete}

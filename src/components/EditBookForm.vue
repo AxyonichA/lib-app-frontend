@@ -40,8 +40,8 @@ function closeModal() {
 </script>
 
 <template>
-	<Modal v-model:modalShow="modalShow">
-		<template v-if="user.role === 'admin'" v-slot:modalButton>
+	<Modal v-if="user.role === 'admin'" v-model:modalShow="modalShow">
+		<template v-slot:modalButton>
 			<div class="d-flex justify-content-center ">
 				<button type="button" @click="openModal" class="btn btn-primary w-50">
 					Добавить книгу
@@ -54,7 +54,7 @@ function closeModal() {
 		</template>
 		<template v-slot:modalBody>
 			<form class="p-2 border border-2 border-primary rounded">
-				<Input type="text" label="Заголовок" v-model:model="editedBook.title" class="w-100 form-control fs-5" />
+				<Input type="text" label="Заголовок" inputID="Заголовок" v-model:model="editedBook.title" class="w-100 form-control fs-5" />
 				<label class="d-block">
 					<p class="m-1">Текст:</p>
 					<textarea v-model.trim="editedBook.body" class="w-100 form-control fs-6" rows="10"/>               
@@ -63,7 +63,7 @@ function closeModal() {
 					<p class="m-1">Имя автора:</p>
 					<select @change="(e) => editedBook.authorID = e.target.value" :disabled="authorId && !editedBook._id ? true : false" class="form-select">
 						<option v-if="!editedBook.authorID" selected>Выбрать автора:</option>
-						<option v-for="author in authors" :value="author._id" :key="author._id" :selected="editedBook.authorID === author._id ? true : false">{{ author.name }}</option>
+						<option v-for="author in authors" :value="author._id" :key="author._id" :selected="editedBook.authorID === author._id ? true : false">{{ author.fullname }}</option>
 					</select>              
 				</label>
 				<input type="file" ref="bookFileInput" @change="fileHandler.handleFileChange">

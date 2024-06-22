@@ -110,9 +110,9 @@ onBeforeMount(async() => {
 	</Modal>
 	<section class="row row-cols-3 my-4 border mx-0 border-primary border-2 rounded">
 		<div v-for="author in authors" :key="author._id"  class="col d-flex flex-column justify-content-between align-items-center border border-primary" >
-				<RouterLink :to="`/authors/${author._id}/books`" :key="author._id" class="fs-4 text-center">
+				<RouterLink :to="`/authors/${author._id}`" :key="author._id" class="fs-4 text-center">
 					<img v-for="photo in author.photoes" :src="`${Backend_URL}/${photo.file_storage_link}`" :key="photo._id" class="w-100"/>
-					<p>{{author.name}}</p>
+					<p>{{author.fullname}}</p>
 				</RouterLink>
 				<button  v-if="user.role === 'admin'" @click.prevent="async () => await handleAuthorDelete(author._id)" class="btn btn-danger">Удалить автора</button>			
 		</div>

@@ -1,15 +1,16 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue';
+import { useRoute } from 'vue-router'
 
 import Book from './Book.vue'
 import EditBookForm from './EditBookForm.vue';
+
 import { getBooks, bookDelete, bookAdd, bookUpdate } from '../requests/booksReq';
 import { getAuthorBooks, getAuthors } from '../requests/authorReq';
 import { getFileById, removeFiles, uploadFile } from '../requests/fileReq'
 
-const props = defineProps({
-	authorID: String
-})
+let route = useRoute()
+let {authorId} = route.params
 
 const books = ref([])
 const authors = ref([])
@@ -35,7 +36,7 @@ async function handleBookEdit(selectedFile, closeModal) {
 			selectedFile.options.entity_id = createdBookID
 			await uploadFile(createdBookID, selectedFile)
 		} 
-		books.value = props.authorID ? await getAuthorBooks(props.authorID) : await getBooks()
+		books.value = authorId ? await getAuthorBooks(authorId) : await getBooks()
 		books.value.forEach(async(book) => {
 			book.photoes = await getFileById(book._id)
 		})
@@ -64,7 +65,7 @@ function handleChangeBookClick(book) {
 }
 
 onBeforeMount(async() => {
-	books.value = props.authorID ? await getAuthorBooks(props.authorID) : await getBooks()
+	books.value = authorId ? await getAuthorBooks(authorId) : await getBooks()
 	books.value.forEach(async(book) => {
 			book.photoes = await getFileById(book._id)
 		})	
@@ -74,7 +75,7 @@ onBeforeMount(async() => {
 
 
 <template>
-	<EditBookForm @handleBookEdit="handleBookEdit" :authors="authors" :authorId="authorID" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" />
+	<EditBookForm @handleBookEdit="handleBookEdit" :authors="authors" :authorId="authorId" v-model:modalTitle="modalTitle" v-model:modalShow="modalShow" v-model:editedBook="editedBook" />
 	<section class="row row-cols-2 my-4 border mx-0 border-primary border-2 rounded">
 		<Book v-for="book in books" :book="book" @handleChangeBookClick="handleChangeBookClick" @handleBookDelete="handleBookDelete" :key="book.id" />
 	</section>

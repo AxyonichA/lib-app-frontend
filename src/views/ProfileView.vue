@@ -51,7 +51,7 @@ function handleInputTouch(model) {
 			<button @click.prevent="editToggle" class="btn btn-primary">
 				{{ isEdit ? 'Отмена' : 'Редактировать профиль'}}
 			</button>
-			<button @click.prevent="handleUpdateUser" class="btn btn-secondary">Сохранить изменения</button>				
+			<button v-if="isEdit" @click.prevent="handleUpdateUser" class="btn btn-secondary">Сохранить изменения</button>				
 		</div>
 	</div>
 </template>

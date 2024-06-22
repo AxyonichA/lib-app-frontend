@@ -9,6 +9,14 @@ async function getAuthors() {
 	}
 }
 
+async function getAuthor(id) {
+	try {
+		const response = await axios.get(`/api/authors/${id}`)
+		return response.data
+	} catch (err) {
+		console.log(err);
+	}
+}
 async function createAuthor(editedAuthor) {
 	try {
 		const response = await axios.post("/api/authors", {...editedAuthor})
@@ -17,13 +25,15 @@ async function createAuthor(editedAuthor) {
 		console.log(err)
 	}
 }
-// async function createAuthor(editedAuthor) {
-// 	try {
-// 		await axios.post("/api/authors", {...editedAuthor})
-// 	}	catch (err) {
-// 		console.log(err)
-// 	}
-// }
+
+async function updateAuthor(editedAuthor) {
+	try {
+		const response = await axios.patch(`/api/authors/${editedAuthor._id}`, editedAuthor)
+		return response.data
+	} catch (err) {
+		console.log(err);
+	}
+}
 
 async function deleteAuthor(id) {
 	try {
@@ -41,4 +51,4 @@ async function getAuthorBooks(id) {
 	}
 }
 
-export {getAuthors, getAuthorBooks, createAuthor, deleteAuthor}
+export {getAuthors, getAuthor, getAuthorBooks, createAuthor, updateAuthor, deleteAuthor}
