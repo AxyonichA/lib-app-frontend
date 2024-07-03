@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 const Backend_URL = import.meta.env.VITE_BACKEND_PORT_ADDRESS
 
 import { useAuthStore } from '../stores/useAuthStore';
+
 const { user } = useAuthStore()
 
 let route = useRoute()

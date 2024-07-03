@@ -10,7 +10,7 @@ import {axios} from "../services/axios";
 // }
 
 
-// ищет файл по айди сущности, в ответе содержится file_storage_link и _id
+
 export async function getFileById(entity_id){
   try {
       const response = await axios.get(`/api/files/${entity_id}`);
@@ -20,8 +20,18 @@ export async function getFileById(entity_id){
   }
 } 
 
+// ищет файл по айди сущности, в ответе содержится file_storage_link и _id
+export async function getFilesByEntityID(entity_id){
+  try {
+      const response = await axios.get(`/api/files/${entity_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+  }
+} 
+
 // удаляет !!!ВСЕ!!! файлы по айди сущности
-export async function removeFiles(entity_id){
+export async function removeFilesByEntityID(entity_id){
   try {
       const response = await axios.delete(`/api/files/${entity_id}`);
       return response;
@@ -30,22 +40,33 @@ export async function removeFiles(entity_id){
   }
 }
 
+export async function deleteFileByID(entityID, fileID) {
+  try {
+    const response = await axios.delete(`/api/files/${entityID}/${fileID}`)
+    return response
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // принимает айди сущности, к которой относится файл, экземпляр File из инпута 
 // и объект options, содержащий информацию о сущности, создаёт экземпляр FormData и отправляет на сервер
-export async function uploadFile(entity_id, {file, options}){
-  console.log('uploadFile', entity_id, file, options)
-  try {               
+export async function uploadFiles(entity_id, {files, options}){
+  try {
+    console.log(files);
+    for (const file of files) {
+      console.log('uploadFiles', entity_id, file, options) 
       let formData = new FormData();
       formData.append('entity_id', options.entity_id)
       formData.append('entity_type', options.entity_type)
       formData.append('entity_propertyName', options.entity_propertyName )
       formData.append('file', file);
       const response = await axios.post(`/api/files/${entity_id}/upload`, formData, {headers: {
-          'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
-        }})
-      return response;
-    } catch (error) {
-      console.log(error);
+          'Content-Type': 'multipart/form-data',
+      }})
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 

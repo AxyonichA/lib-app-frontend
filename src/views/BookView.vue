@@ -3,7 +3,7 @@ import { RouterLink, useRoute } from 'vue-router';
 
 import Input from '../components/Input.vue';
 import { onBeforeMount, ref } from 'vue'
-import { getFileById } from '../requests/fileReq'
+import { getFilesByEntityID } from '../requests/fileReq'
 import { getBook } from '../requests/booksReq';
 
 const Backend_URL = import.meta.env.VITE_BACKEND_PORT_ADDRESS
@@ -15,7 +15,7 @@ let book = ref({})
 
 onBeforeMount(async() => {
 	book.value = await getBook(bookID)
-	book.value.photoes = await getFileById(bookID)
+	book.value.photoes = await getFilesByEntityID(bookID)
 })
 </script>
 
